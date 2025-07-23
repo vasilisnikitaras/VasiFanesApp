@@ -1,241 +1,131 @@
+/* Base Reset and Layout */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background-color 0.3s, color 0.3s;
+}
+header, footer {
+  text-align: center;
+  padding: 2rem;
+  background-color: var(--header-bg);
+  color: var(--header-text);
+}
+nav {
+  text-align: center;
+  margin: 1rem 0;
+}
+a {
+  text-decoration: none;
+  color: var(--link);
+}
+
+button {
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  border: none;
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border-radius: 6px;
+  cursor: pointer;
+}
+button:hover {
+  background-color: var(--button-hover);
+}
+
+/* Theme Toggle */
+.theme-toggle-button {
+  margin-top: 1rem;
+}
+
+/* Grid Layout */
+.app-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem;
+}
+
+/* Tool Cards */
+.card {
+  background-color: var(--card-bg);
+  color: var(--card-text);
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  text-align: center;
+}
+.card h2 {
+  margin-bottom: 0.8rem;
+}
+
+/* Modal Styles */
+#modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.7);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+#modal-overlay.modal-hidden {
+  display: none;
+}
+#modal-overlay.modal-visible {
+  display: flex;
+}
+#modal-content {
+  background-color: var(--modal-bg);
+  padding: 1rem;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 900px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  position: relative;
+}
+.modal-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background-color: transparent;
+  font-size: 1.5rem;
+  color: var(--text);
+  border: none;
+  cursor: pointer;
+}
+iframe {
+  width: 100%;
+  height: 600px;
+  border: none;
+}
+
+/* Theme Variables */
 :root {
-  --bg: #ffffff;
-  --text: #1a1a1a;
-  --accent: #0055aa;
-<<<<<<< HEAD
-  --card-bg: #f7f7f7;
-=======
-  --card-bg: #f0f0f0;
->>>>>>> 3e60ac2ab094a9fc8e7e47ebb51cf900edb0a76b
-  --button-bg: #e5e5e5;
+  --bg: #f9f9f9;
+  --text: #222;
+  --link: #0077cc;
+  --header-bg: #0077cc;
+  --header-text: white;
+  --button-bg: #0066bb;
+  --button-text: white;
+  --button-hover: #004499;
+  --card-bg: white;
+  --card-text: #222;
+  --modal-bg: white;
 }
 
 [data-theme="dark"] {
   --bg: #121212;
-  --text: #eeeeee;
-  --accent: #00ffff;
-  --card-bg: #1e1e1e;
+  --text: #eee;
+  --link: #6ab0f3;
+  --header-bg: #222;
+  --header-text: #eee;
   --button-bg: #333;
+  --button-text: #eee;
+  --button-hover: #555;
+  --card-bg: #1e1e1e;
+  --card-text: #eee;
+  --modal-bg: #2c2c2c;
 }
-
-body {
-  margin: 0;
-  font-family: sans-serif;
-  background-color: var(--bg);
-  color: var(--text);
-}
-
-header {
-  background-color: var(--accent);
-  color: white;
-  text-align: center;
-  padding: 1rem;
-}
-
-<<<<<<< HEAD
-nav {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-nav a {
-  background-color: var(--button-bg);
-  color: var(--text);
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: bold;
-=======
-.theme-toggle-button {
-  margin-top: 0.5rem;
-  background-color: var(--button-bg);
-  color: var(--text);
-  border: none;
-  padding: 0.4rem 0.8rem;
-  border-radius: 4px;
-  cursor: pointer;
->>>>>>> 3e60ac2ab094a9fc8e7e47ebb51cf900edb0a76b
-}
-
-.app-grid {
-  display: grid;
-<<<<<<< HEAD
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-=======
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
->>>>>>> 3e60ac2ab094a9fc8e7e47ebb51cf900edb0a76b
-  gap: 1rem;
-  padding: 2rem;
-}
-
-.card {
-  background-color: var(--card-bg);
-  padding: 1.2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  text-align: center;
-}
-
-button {
-  background-color: var(--accent);
-  color: white;
-  border: none;
-<<<<<<< HEAD
-  padding: 0.6rem 1.2rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  margin-top: 1rem;
-=======
-  padding: 0.6rem 1rem;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-top: 1rem;
-  font-weight: bold;
->>>>>>> 3e60ac2ab094a9fc8e7e47ebb51cf900edb0a76b
-}
-
-button:hover {
-  background-color: #003377;
-}
-
-<<<<<<< HEAD
-.theme-toggle-button {
-  margin-top: 0.5rem;
-  padding: 0.4rem 0.8rem;
-  background-color: var(--button-bg);
-  color: var(--text);
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-footer {
-  text-align: center;
-  padding: 1rem;
-  background-color: var(--accent);
-  color: white;
-}
-
-/* 🎬 Modal Styling */
-#modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-=======
-#modal-overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
->>>>>>> 3e60ac2ab094a9fc8e7e47ebb51cf900edb0a76b
-  background-color: rgba(0,0,0,0.6);
-  backdrop-filter: blur(6px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-}
-
-.modal-hidden {
-  display: none;
-}
-
-#modal-content {
-  background-color: var(--card-bg);
-<<<<<<< HEAD
-  border-radius: 10px;
-  padding: 1rem;
-  width: 90%;
-  max-width: 800px;
-  box-shadow: 0 0 24px rgba(0,0,0,0.3);
-  position: relative;
-  animation: fadeInModal 0.4s ease;
-=======
-  padding: 1rem;
-  border-radius: 10px;
-  width: 90%;
-  max-width: 800px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.3);
-  position: relative;
->>>>>>> 3e60ac2ab094a9fc8e7e47ebb51cf900edb0a76b
-}
-
-.modal-close {
-  position: absolute;
-<<<<<<< HEAD
-  top: 10px;
-  right: 14px;
-  font-size: 1.4rem;
-  background: transparent;
-  border: none;
-  color: var(--text);
-  cursor: pointer;
-  z-index: 1000;
-}
-
-#modal-iframe {
-=======
-  top: 10px; right: 10px;
-  background: transparent;
-  border: none;
-  font-size: 1.5rem;
-  color: var(--text);
-  cursor: pointer;
-}
-
-iframe {
->>>>>>> 3e60ac2ab094a9fc8e7e47ebb51cf900edb0a76b
-  width: 100%;
-  height: 600px;
-  border: none;
-  border-radius: 6px;
-}
-<<<<<<< HEAD
-
-/* ✨ Animation */
-@keyframes fadeInModal {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-/* 📱 Mobile Responsive */
-@media (max-width: 600px) {
-  #modal-content {
-    width: 95%;
-    height: auto;
-    padding: 0.8rem;
-  }
-
-  #modal-iframe {
-    height: 75vh;
-  }
-
-  .modal-close {
-    font-size: 1.2rem;
-    top: 6px;
-    right: 10px;
-  }
-
-  .card h2 {
-    font-size: 1rem;
-  }
-
-  .card button {
-    font-size: 0.85rem;
-    padding: 0.5rem 1rem;
-  }
-
-  header h1 {
-    font-size: 1.4rem;
-  }
-
-  header p {
-    font-size: 0.85rem;
-  }
-}
-=======
->>>>>>> 3e60ac2ab094a9fc8e7e47ebb51cf900edb0a76b
