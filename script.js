@@ -1,36 +1,39 @@
+// 🌗 Theme Toggle
 function toggleTheme() {
   const html = document.documentElement;
   const current = html.getAttribute("data-theme");
-  html.setAttribute("data-theme", current === "dark" ? "light" : "dark");
+  html.setAttribute("data-theme", current === "light" ? "dark" : "light");
 }
 
+// 🧪 Modal Launcher
 function loadApp(url) {
-<<<<<<< HEAD
-  const modal = document.getElementById("modal-overlay");
+  const overlay = document.getElementById("modal-overlay");
   const iframe = document.getElementById("modal-iframe");
-=======
-  const iframe = document.getElementById("modal-iframe");
-  const modal = document.getElementById("modal-overlay");
->>>>>>> 3e60ac2ab094a9fc8e7e47ebb51cf900edb0a76b
+
   iframe.src = url;
-  modal.classList.remove("modal-hidden");
+  overlay.classList.remove("modal-hidden");
+  overlay.classList.add("modal-visible");
+
+  // Optional: disable background scroll
+  document.body.style.overflow = "hidden";
 }
 
+// 🧼 Modal Closer
 function closeApp() {
-<<<<<<< HEAD
-  const modal = document.getElementById("modal-overlay");
+  const overlay = document.getElementById("modal-overlay");
   const iframe = document.getElementById("modal-iframe");
-  iframe.src = "";
-  modal.classList.add("modal-hidden");
 
-  const grid = document.querySelector(".app-grid");
-  if (grid) {
-    grid.scrollIntoView({ behavior: "smooth" });
-  }
-=======
-  const iframe = document.getElementById("modal-iframe");
-  const modal = document.getElementById("modal-overlay");
   iframe.src = "";
-  modal.classList.add("modal-hidden");
->>>>>>> 3e60ac2ab094a9fc8e7e47ebb51cf900edb0a76b
+  overlay.classList.remove("modal-visible");
+  overlay.classList.add("modal-hidden");
+
+  // Re-enable scroll
+  document.body.style.overflow = "auto";
 }
+
+// 🧠 Escape Key Support
+document.addEventListener("keydown", function (event) {
+  if (event.key === "Escape") {
+    closeApp();
+  }
+});
