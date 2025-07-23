@@ -18,15 +18,46 @@
   </nav>
 
   <section class="app-grid">
-    <!-- Example card -->
+    <!-- All 9 tool cards -->
     <div class="card">
       <h2>🧮 Mini Calculator</h2>
       <button onclick="loadApp('apps/calculator.html')">Launch</button>
     </div>
-    <!-- Add all 9 tools like this -->
+    <div class="card">
+      <h2>📝 Markdown Previewer</h2>
+      <button onclick="loadApp('apps/markdown-preview.html')">Launch</button>
+    </div>
+    <div class="card">
+      <h2>😃 Emoji Feedback</h2>
+      <button onclick="loadApp('apps/emoji-feedback.html')">Launch</button>
+    </div>
+    <div class="card">
+      <h2>📋 Clipboard Copy</h2>
+      <button onclick="loadApp('apps/clipboard-copy.html')">Launch</button>
+    </div>
+    <div class="card">
+      <h2>✏️ Text Formatter</h2>
+      <button onclick="loadApp('apps/formatter.html')">Launch</button>
+    </div>
+    <div class="card">
+      <h2>🔐 Password Checker</h2>
+      <button onclick="loadApp('apps/password-checker.html')">Launch</button>
+    </div>
+    <div class="card">
+      <h2>🧾 JSON Exporter</h2>
+      <button onclick="loadApp('apps/json-exporter.html')">Launch</button>
+    </div>
+    <div class="card">
+      <h2>🎨 RGB to HEX Converter</h2>
+      <button onclick="loadApp('apps/rgb-to-hex.html')">Launch</button>
+    </div>
+    <div class="card">
+      <h2>📅 Date Logger</h2>
+      <button onclick="loadApp('apps/date-logger.html')">Launch</button>
+    </div>
   </section>
 
-  <!-- Modal overlay (only this handles tool launching now) -->
+  <!-- Modal system -->
   <div id="modal-overlay" class="modal-hidden" onclick="closeApp()">
     <div id="modal-content" onclick="event.stopPropagation()">
       <button onclick="closeApp()" class="modal-close">✖</button>
