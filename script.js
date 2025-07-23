@@ -5,20 +5,15 @@ function toggleTheme() {
 }
 
 function loadApp(url) {
-  const modal = document.getElementById("modal-overlay");
   const iframe = document.getElementById("modal-iframe");
+  const modal = document.getElementById("modal-overlay");
   iframe.src = url;
   modal.classList.remove("modal-hidden");
 }
 
 function closeApp() {
-  const modal = document.getElementById("modal-overlay");
   const iframe = document.getElementById("modal-iframe");
+  const modal = document.getElementById("modal-overlay");
   iframe.src = "";
   modal.classList.add("modal-hidden");
-
-  const grid = document.querySelector(".app-grid");
-  if (grid) {
-    grid.scrollIntoView({ behavior: "smooth" });
-  }
 }
