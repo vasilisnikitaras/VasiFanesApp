@@ -5,44 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VasiFanes.app</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="assets/favicon.ico" />
 </head>
 <body>
   <header>
     <h1>VasiFanes.app 🧪</h1>
     <p>One page. Endless ideas.</p>
-    <button class="theme-toggle-button" onclick="toggleTheme()" aria-label="Toggle Theme">
-      Toggle Theme
-    </button>
+    <button class="theme-toggle-button" onclick="toggleTheme()">Toggle Theme</button>
   </header>
 
   <section class="app-grid">
     <div class="card">
       <h2>🧮 Mini Calculator</h2>
-      <button onclick="loadApp('apps/calculator.html')" aria-label="Launch Calculator">Launch</button>
+      <button onclick="loadApp('apps/calculator.html')">Launch</button>
     </div>
 
     <div class="card">
       <h2>⏱️ Pomodoro Timer</h2>
-      <button onclick="loadApp('apps/timer.html')" aria-label="Launch Timer">Launch</button>
+      <button onclick="loadApp('apps/timer.html')">Launch</button>
     </div>
 
     <!-- Add more tool cards here -->
   </section>
 
-  <div id="modal-overlay" class="modal-hidden" onclick="closeApp()" aria-hidden="true">
+  <div id="modal-overlay" class="modal-hidden" onclick="closeApp()">
     <div id="modal-content" onclick="event.stopPropagation()">
-      <button onclick="closeApp()" class="modal-close" aria-label="Close Modal">✖</button>
-      <iframe id="modal-iframe" src="" frameborder="0" title="Tool Viewer"></iframe>
+      <button class="modal-close" onclick="closeApp()">✖</button>
+      <iframe id="modal-iframe" src="" title="Tool Viewer"></iframe>
     </div>
   </div>
 
   <footer>
     <p>&copy; 2025 VasiFanes.app | Powered by VasiVerse</p>
-    <p>
-      <a href="privacy.html">Privacy Policy</a> |
-      <a href="terms.html">Terms of Use</a>
-    </p>
   </footer>
 
   <script src="script.js"></script>
