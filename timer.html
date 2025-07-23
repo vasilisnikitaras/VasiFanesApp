@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pomodoro Timer</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 2rem;
+    }
+    h1 {
+      margin-bottom: 1rem;
+    }
+    #timer {
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+    }
+    button {
+      margin: 0.5rem;
+      padding: 0.7rem 1.2rem;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Pomodoro Timer ⏱️</h1>
+  <div id="timer">25:00</div>
+  <button onclick="startTimer()">Start</button>
+  <button onclick="resetTimer()">Reset</button>
+
+  <script>
+    let countdown;
+    let timeLeft = 1500; // 25 minutes
+
+    function updateDisplay() {
+      const mins = Math.floor(timeLeft / 60);
+      const secs = timeLeft % 60;
+      document.getElementById("timer").textContent =
+        `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+    function startTimer() {
+      clearInterval(countdown);
+      countdown = setInterval(() => {
+        if (timeLeft > 0) {
+          timeLeft--;
+          updateDisplay();
+        } else {
+          clearInterval(countdown);
+          alert("Time's up! Take a break.");
+        }
+      }, 1000);
+    }
+
+    function resetTimer() {
+      clearInterval(countdown);
+      timeLeft = 1500;
+      updateDisplay();
+    }
+
+    updateDisplay();
+  </script>
+</body>
+</html>

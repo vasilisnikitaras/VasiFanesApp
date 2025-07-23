@@ -2,7 +2,11 @@
   --bg: #ffffff;
   --text: #1a1a1a;
   --accent: #0055aa;
+<<<<<<< HEAD
   --card-bg: #f7f7f7;
+=======
+  --card-bg: #f0f0f0;
+>>>>>>> 3e60ac2ab094a9fc8e7e47ebb51cf900edb0a76b
   --button-bg: #e5e5e5;
 }
 
@@ -28,6 +32,7 @@ header {
   padding: 1rem;
 }
 
+<<<<<<< HEAD
 nav {
   display: flex;
   justify-content: center;
@@ -42,11 +47,25 @@ nav a {
   border-radius: 6px;
   text-decoration: none;
   font-weight: bold;
+=======
+.theme-toggle-button {
+  margin-top: 0.5rem;
+  background-color: var(--button-bg);
+  color: var(--text);
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+>>>>>>> 3e60ac2ab094a9fc8e7e47ebb51cf900edb0a76b
 }
 
 .app-grid {
   display: grid;
+<<<<<<< HEAD
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+=======
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+>>>>>>> 3e60ac2ab094a9fc8e7e47ebb51cf900edb0a76b
   gap: 1rem;
   padding: 2rem;
 }
@@ -63,17 +82,26 @@ button {
   background-color: var(--accent);
   color: white;
   border: none;
+<<<<<<< HEAD
   padding: 0.6rem 1.2rem;
   border-radius: 6px;
   cursor: pointer;
   font-weight: bold;
   margin-top: 1rem;
+=======
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 1rem;
+  font-weight: bold;
+>>>>>>> 3e60ac2ab094a9fc8e7e47ebb51cf900edb0a76b
 }
 
 button:hover {
   background-color: #003377;
 }
 
+<<<<<<< HEAD
 .theme-toggle-button {
   margin-top: 0.5rem;
   padding: 0.4rem 0.8rem;
@@ -98,6 +126,12 @@ footer {
   left: 0;
   width: 100vw;
   height: 100vh;
+=======
+#modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+>>>>>>> 3e60ac2ab094a9fc8e7e47ebb51cf900edb0a76b
   background-color: rgba(0,0,0,0.6);
   backdrop-filter: blur(6px);
   display: flex;
@@ -112,6 +146,7 @@ footer {
 
 #modal-content {
   background-color: var(--card-bg);
+<<<<<<< HEAD
   border-radius: 10px;
   padding: 1rem;
   width: 90%;
@@ -119,10 +154,19 @@ footer {
   box-shadow: 0 0 24px rgba(0,0,0,0.3);
   position: relative;
   animation: fadeInModal 0.4s ease;
+=======
+  padding: 1rem;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 800px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  position: relative;
+>>>>>>> 3e60ac2ab094a9fc8e7e47ebb51cf900edb0a76b
 }
 
 .modal-close {
   position: absolute;
+<<<<<<< HEAD
   top: 10px;
   right: 14px;
   font-size: 1.4rem;
@@ -134,11 +178,23 @@ footer {
 }
 
 #modal-iframe {
+=======
+  top: 10px; right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text);
+  cursor: pointer;
+}
+
+iframe {
+>>>>>>> 3e60ac2ab094a9fc8e7e47ebb51cf900edb0a76b
   width: 100%;
   height: 600px;
   border: none;
   border-radius: 6px;
 }
+<<<<<<< HEAD
 
 /* ✨ Animation */
 @keyframes fadeInModal {
@@ -181,3 +237,5 @@ footer {
     font-size: 0.85rem;
   }
 }
+=======
+>>>>>>> 3e60ac2ab094a9fc8e7e47ebb51cf900edb0a76b
