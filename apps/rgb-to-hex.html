@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <title>RGB to HEX</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #fefefe;
+      color: #222;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    input {
+      width: 60px;
+      margin: 0.4rem;
+      padding: 0.4rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      padding: 0.6rem 1rem;
+      background-color: #0066cc;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    #output {
+      margin-top: 1.2rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>🎨 RGB to HEX Converter</h2>
+  <input type="number" id="r" min="0" max="255" placeholder="R" />
+  <input type="number" id="g" min="0" max="255" placeholder="G" />
+  <input type="number" id="b" min="0" max="255" placeholder="B" />
+  <br />
+  <button onclick="convert()">Convert</button>
+  <div id="output"></div>
+
+  <script>
+    function convert() {
+      const r = parseInt(document.getElementById("r").value) || 0;
+      const g = parseInt(document.getElementById("g").value) || 0;
+      const b = parseInt(document.getElementById("b").value) || 0;
+
+      const hex = "#" + [r, g, b]
+        .map((n) => n.toString(16).padStart(2, "0"))
+        .join("");
+      document.getElementById("output").innerText = `HEX: ${hex}`;
+    }
+  </script>
+</body>
+</html>

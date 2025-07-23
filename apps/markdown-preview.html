@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Markdown Preview</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      gap: 2rem;
+      padding: 2rem;
+      background: #f0f0f0;
+    }
+    textarea {
+      width: 45%;
+      height: 300px;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    #preview {
+      width: 45%;
+      height: 300px;
+      overflow: auto;
+      background: white;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <textarea id="markdown" placeholder="# Type Markdown here..." oninput="updatePreview()"></textarea>
+  <div id="preview"></div>
+
+  <script>
+    function updatePreview() {
+      const md = document.getElementById("markdown").value;
+      document.getElementById("preview").innerHTML = marked(md);
+    }
+  </script>
+</body>
+</html>

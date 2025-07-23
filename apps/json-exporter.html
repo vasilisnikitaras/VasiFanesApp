@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>JSON Exporter</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 2rem;
+      background: #fcfcfc;
+    }
+    textarea {
+      width: 80%;
+      height: 140px;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    button {
+      padding: 0.6rem 1.2rem;
+      background: #008866;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #output {
+      margin-top: 1rem;
+      white-space: pre-wrap;
+      text-align: left;
+      max-width: 600px;
+      margin: 1rem auto;
+      background: #eee;
+      padding: 1rem;
+      border-radius: 6px;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <h2>💾 JSON Exporter</h2>
+  <textarea id="rawData" placeholder='Type comma-separated items...'></textarea>
+  <br />
+  <button onclick="exportJSON()">Convert to JSON</button>
+  <div id="output"></div>
+
+  <script>
+    function exportJSON() {
+      const input = document.getElementById("rawData").value;
+      const items = input.split(",").map(item => item.trim());
+      const json = JSON.stringify(items, null, 2);
+      document.getElementById("output").textContent = json;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VasiFanes.app</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>VasiFanes.app 🧪</h1>
+    <p>One page. Endless ideas.</p>
+    <button class="theme-toggle-button" onclick="toggleTheme()">Toggle Theme</button>
+  </header>
+
+  <nav>
+    <a href="#">Back to Home</a>
+  </nav>
+
+  <section class="app-grid">
+    <!-- Example card -->
+    <div class="card">
+      <h2>🧮 Mini Calculator</h2>
+      <button onclick="loadApp('apps/calculator.html')">Launch</button>
+    </div>
+    <!-- Add all 9 tools like this -->
+  </section>
+
+  <!-- Modal overlay (only this handles tool launching now) -->
+  <div id="modal-overlay" class="modal-hidden" onclick="closeApp()">
+    <div id="modal-content" onclick="event.stopPropagation()">
+      <button onclick="closeApp()" class="modal-close">✖</button>
+      <iframe id="modal-iframe" src="" frameborder="0"></iframe>
+    </div>
+  </div>
+
+  <footer>
+    <p>Powered by VasiVerse © 2025</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

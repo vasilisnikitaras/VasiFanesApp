@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tiny Calculator</title>
+  <style>
+    :root {
+      --bg: #f0f0f0;
+      --text: #111;
+      --accent: #0066cc;
+    }
+    [data-theme="dark"] {
+      --bg: #121212;
+      --text: #eee;
+      --accent: #00ccff;
+    }
+
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 2rem;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 1rem;
+    }
+
+    input {
+      width: 100px;
+      margin: 0.5rem;
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    button {
+      padding: 0.6rem 1.2rem;
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 1rem;
+    }
+
+    button:hover {
+      background-color: #004499;
+    }
+
+    #result {
+      margin-top: 1.5rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>🧮 Mini Calculator</h2>
+  <input type="number" id="num1" placeholder="First number" />
+  <input type="number" id="num2" placeholder="Second number" />
+  <br />
+  <button onclick="calculate()">Add</button>
+  <div id="result"></div>
+
+  <script>
+    function calculate() {
+      const a = parseFloat(document.getElementById("num1").value);
+      const b = parseFloat(document.getElementById("num2").value);
+      if (isNaN(a) || isNaN(b)) {
+        document.getElementById("result").innerText = "Please enter valid numbers!";
+      } else {
+        document.getElementById("result").innerText = `Result: ${a + b}`;
+      }
+    }
+  </script>
+</body>
+</html>

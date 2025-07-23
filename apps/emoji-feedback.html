@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Emoji Feedback</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 2rem;
+      background: #fff;
+    }
+
+    button {
+      font-size: 2rem;
+      margin: 0.4rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    #results {
+      margin-top: 1.5rem;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <h2>😍 Emoji Feedback</h2>
+  <button onclick="vote('👍')">👍</button>
+  <button onclick="vote('😍')">😍</button>
+  <button onclick="vote('😢')">😢</button>
+  <button onclick="vote('🔥')">🔥</button>
+
+  <div id="results"></div>
+
+  <script>
+    const votes = { '👍': 0, '😍': 0, '😢': 0, '🔥': 0 };
+
+    function vote(emoji) {
+      votes[emoji]++;
+      let output = "";
+      for (const key in votes) {
+        output += `${key}: ${votes[key]}  `;
+      }
+      document.getElementById("results").innerText = output;
+    }
+  </script>
+</body>
+</html>
