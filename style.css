@@ -2,7 +2,7 @@
   --bg: #ffffff;
   --text: #1a1a1a;
   --accent: #0055aa;
-  --card-bg: #f7f7f7;
+  --card-bg: #f0f0f0;
   --button-bg: #e5e5e5;
 }
 
@@ -28,25 +28,19 @@ header {
   padding: 1rem;
 }
 
-nav {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-nav a {
+.theme-toggle-button {
+  margin-top: 0.5rem;
   background-color: var(--button-bg);
   color: var(--text);
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: bold;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 .app-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1rem;
   padding: 2rem;
 }
@@ -63,41 +57,21 @@ button {
   background-color: var(--accent);
   color: white;
   border: none;
-  padding: 0.6rem 1.2rem;
+  padding: 0.6rem 1rem;
   border-radius: 6px;
   cursor: pointer;
-  font-weight: bold;
   margin-top: 1rem;
+  font-weight: bold;
 }
 
 button:hover {
   background-color: #003377;
 }
 
-.theme-toggle-button {
-  margin-top: 0.5rem;
-  padding: 0.4rem 0.8rem;
-  background-color: var(--button-bg);
-  color: var(--text);
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-footer {
-  text-align: center;
-  padding: 1rem;
-  background-color: var(--accent);
-  color: white;
-}
-
-/* 🎬 Modal Styling */
 #modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
   background-color: rgba(0,0,0,0.6);
   backdrop-filter: blur(6px);
   display: flex;
@@ -112,72 +86,27 @@ footer {
 
 #modal-content {
   background-color: var(--card-bg);
-  border-radius: 10px;
   padding: 1rem;
+  border-radius: 10px;
   width: 90%;
   max-width: 800px;
-  box-shadow: 0 0 24px rgba(0,0,0,0.3);
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
   position: relative;
-  animation: fadeInModal 0.4s ease;
 }
 
 .modal-close {
   position: absolute;
-  top: 10px;
-  right: 14px;
-  font-size: 1.4rem;
+  top: 10px; right: 10px;
   background: transparent;
   border: none;
+  font-size: 1.5rem;
   color: var(--text);
   cursor: pointer;
-  z-index: 1000;
 }
 
-#modal-iframe {
+iframe {
   width: 100%;
   height: 600px;
   border: none;
   border-radius: 6px;
-}
-
-/* ✨ Animation */
-@keyframes fadeInModal {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-/* 📱 Mobile Responsive */
-@media (max-width: 600px) {
-  #modal-content {
-    width: 95%;
-    height: auto;
-    padding: 0.8rem;
-  }
-
-  #modal-iframe {
-    height: 75vh;
-  }
-
-  .modal-close {
-    font-size: 1.2rem;
-    top: 6px;
-    right: 10px;
-  }
-
-  .card h2 {
-    font-size: 1rem;
-  }
-
-  .card button {
-    font-size: 0.85rem;
-    padding: 0.5rem 1rem;
-  }
-
-  header h1 {
-    font-size: 1.4rem;
-  }
-
-  header p {
-    font-size: 0.85rem;
-  }
 }
