@@ -35,3 +35,14 @@ You can view the project at:
 ---
 
 ## 📁 Project Structure
+
+
+---
+
+## 📜 License
+This project is open-source under the MIT License.  
+Feel free to fork it, remix it, and build your own mini tool lab.
+
+---
+
+
