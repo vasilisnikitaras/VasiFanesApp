@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VasiFanes.app</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #333;
+      --header-bg: #f0f0f0;
+      --header-text: #111;
+      --link: #007acc;
+      --button-bg: #007acc;
+      --button-text: #fff;
+      --button-hover: #005fa3;
+    }
+    [data-theme="dark"] {
+      --bg: #1f1f1f;
+      --text: #eee;
+      --header-bg: #292929;
+      --header-text: #fff;
+      --link: #66ccff;
+      --button-bg: #66ccff;
+      --button-text: #000;
+      --button-hover: #33aaff;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background-color 0.3s, color 0.3s;
+    }
+    header, footer {
+      text-align: center;
+      padding: 2rem;
+      background-color: var(--header-bg);
+      color: var(--header-text);
+    }
+    nav {
+      text-align: center;
+      margin: 1rem 0;
+    }
+    a {
+      text-decoration: none;
+      color: var(--link);
+    }
+    button {
+      padding: 0.6rem 1rem;
+      font-size: 1rem;
+      border: none;
+      background-color: var(--button-bg);
+      color: var(--button-text);
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: var(--button-hover);
+    }
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      padding: 2rem;
+    }
+    .card {
+      background: rgba(0, 0, 0, 0.04);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 0 4px rgba(0,0,0,0.1);
+    }
+    .modal-hidden {
+      display: none;
+    }
+    .modal-visible {
+      display: block;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+    #modal-content {
+      position: relative;
+      width: 90%;
+      height: 90%;
+      margin: auto;
+      top: 5%;
+      background: #fff;
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    .modal-close {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      font-size: 1.5rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>VasiFanes.app 🧪</h1>
+    <p>One page. Endless ideas.</p>
+    <button class="theme-toggle-button" onclick="toggleTheme()">Toggle Theme</button>
+  </header>
+
+  <nav>
+    <a href="#">Back to Home</a>
+  </nav>
+
+  <section class="app-grid">
+    <div class="card"><h2>🧮 Mini Calculator</h2><button onclick="loadApp('apps/calculator.html')">Launch</button></div>
+    <div class="card"><h2>📝 Markdown Previewer</h2><button onclick="loadApp('apps/markdown-preview.html')">Launch</button></div>
+    <div class="card"><h2>😃 Emoji Feedback</h2><button onclick="loadApp('apps/emoji-feedback.html')">Launch</button></div>
+    <div class="card"><h2>📋 Clipboard Copy</h2><button onclick="loadApp('apps/clipboard-copy.html')">Launch</button></div>
+    <div class="card"><h2>✏️ Text Formatter</h2><button onclick="loadApp('apps/formatter.html')">Launch</button></div>
+    <div class="card"><h2>🔐 Password Checker</h2><button onclick="loadApp('apps/password-checker.html')">Launch</button></div>
+    <div class="card"><h2>🧾 JSON Exporter</h2><button onclick="loadApp('apps/json-exporter.html')">Launch</button></div>
+    <div class="card"><h2>🎨 RGB to HEX Converter</h2><button onclick="loadApp('apps/rgb-to-hex.html')">Launch</button></div>
+    <div class="card"><h2>📅 Date Logger</h2><button onclick="loadApp('apps/date-logger.html')">Launch</button></div>
+    <div class="card"><h2>✒️ VasiTextForge</h2><button onclick="loadApp('apps/textforge.html')">Launch</button></div>
+  </section>
+
+  <!-- Modal system -->
+  <div id="modal-overlay" class="modal-hidden" onclick="closeApp()">
+    <div id="modal-content" onclick="event.stopPropagation()">
+      <button onclick="closeApp()" class="modal-close">✖</button>
+      <iframe id="modal-iframe" src="" frameborder="0"></iframe>
+    </div>
+  </div>
+
+  <footer>
+    <p>Powered by VasiVerse © 2025</p>
+  </footer>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute("data-theme");
+      html.setAttribute("data-theme", current === "light" ? "dark" : "light");
+    }
+
+    function loadApp(url) {
+      const overlay = document.getElementById("modal-overlay");
+      const iframe = document.getElementById("modal-iframe");
+      iframe.src = url;
+      overlay.classList.remove("modal-hidden");
+      overlay.classList.add("modal-visible");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeApp() {
+      const overlay = document.getElementById("modal-overlay");
+      const iframe = document.getElementById("modal-iframe");
+      iframe.src = "";
+      overlay.classList.remove("modal-visible");
+      overlay.classList.add("modal-hidden");
+      document.body.style.overflow = "auto";
+    }
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        closeApp();
+      }
+    });
+  </script>
+</body>
+</html>
