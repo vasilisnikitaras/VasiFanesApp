@@ -5,6 +5,7 @@
   <title>VasiTextForge</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter&family=Playfair+Display&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter&family=Playfair+Display&family=Roboto+Mono&family=DM+Serif+Display&family=Ubuntu&family=Orbitron&family=Amatic+SC&family=Raleway&family=Courier+Prime&family=Cabin&family=Anton&family=Pacifico&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Press+Start+2P&family=Monoton&family=Gloria+Hallelujah&family=Fredericka+the+Great&family=Luckiest+Guy&family=Special+Elite&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="../style.css" />
   <style>
@@ -96,6 +97,20 @@ h1 {
   <option value="'Anton', sans-serif">Anton</option>
   <option value="'Pacifico', cursive">Pacifico</option>
   <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
+
+
+
+<option value="'Monoton', cursive">Monoton</option>
+<option value="'Luckiest Guy', cursive">Luckiest Guy</option>
+<option value="'Fredericka the Great', serif">Fredericka the Great</option>
+<option value="'Special Elite', cursive">Special Elite</option>
+<option value="'Gloria Hallelujah', cursive">Gloria Hallelujah</option>
+<option value="'Press Start 2P', monospace">Press Start 2P</option>
+
+
+
+
+  
 </select>
 
 
@@ -146,7 +161,7 @@ function changeFont(font) {
 
 </script>
 
-
+<!--
 
 <script>
 function applyRandomFont() {
@@ -159,9 +174,44 @@ function applyRandomFont() {
   changeFont(random);
 }
 
-  
 </script>
 
+-->
+<script>
+const fonts = [
+  "'Fira Code', monospace",
+  "'Inter', sans-serif",
+  "'Playfair Display', serif",
+  "'Roboto Mono', monospace",
+  "'DM Serif Display', serif",
+  "'Ubuntu', sans-serif",
+  "'Orbitron', sans-serif",
+  "'Amatic SC', cursive",
+  "'Raleway', sans-serif",
+  "'Courier Prime', monospace",
+  "'Cabin', sans-serif",
+  "'Anton', sans-serif",
+  "'Pacifico', cursive",
+  "'Bebas Neue', sans-serif",
+  "'Monoton', cursive",
+  "'Luckiest Guy', cursive",
+  "'Fredericka the Great', serif",
+  "'Special Elite', cursive",
+  "'Gloria Hallelujah', cursive",
+  "'Press Start 2P', monospace"
+];
+
+</script>
+
+
+
+
+
+
+
+  
+
+  
 <script>
   function changeFont(font) {
   document.getElementById("inputText").style.fontFamily = font;
