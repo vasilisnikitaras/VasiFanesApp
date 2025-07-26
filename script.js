@@ -43,7 +43,7 @@ document.addEventListener("keydown", function (event) {
 
 
 
-
+/*
 
   function loadApp(url) {
     fetch(url)
@@ -60,3 +60,4 @@ document.addEventListener("keydown", function (event) {
       });
   }
 
+*/
