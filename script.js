@@ -37,3 +37,34 @@ document.addEventListener("keydown", function (event) {
     closeApp();
   }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  function loadApp(url) {
+    fetch(url)
+      .then(response => {
+        if (!response.ok) throw new Error("App not found");
+        return response.text();
+      })
+      .then(html => {
+        document.getElementById("modal-content").innerHTML = html;
+        document.getElementById("modal").style.display = "block";
+      })
+      .catch(error => {
+        console.error("Error loading app:", error);
+      });
+  }
+</script>
