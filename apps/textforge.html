@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>VasiTextForge</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter&family=Playfair+Display&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter&family=Playfair+Display&family=Roboto+Mono&family=DM+Serif+Display&family=Ubuntu&family=Orbitron&family=Amatic+SC&family=Raleway&family=Courier+Prime&family=Cabin&family=Anton&family=Pacifico&family=Bebas+Neue&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="../style.css" />
   <style>
@@ -79,12 +80,39 @@ h1 {
   </section>
 
 
+
+<select id="fontSelector" onchange="changeFont(this.value)" size="1" style="max-height: 200px; overflow-y: auto;">
+  <option value="'Fira Code', monospace">Fira Code</option>
+  <option value="'Inter', sans-serif">Inter</option>
+  <option value="'Playfair Display', serif">Playfair Display</option>
+  <option value="'Roboto Mono', monospace">Roboto Mono</option>
+  <option value="'DM Serif Display', serif">DM Serif</option>
+  <option value="'Ubuntu', sans-serif">Ubuntu</option>
+  <option value="'Orbitron', sans-serif">Orbitron</option>
+  <option value="'Amatic SC', cursive">Amatic SC</option>
+  <option value="'Raleway', sans-serif">Raleway</option>
+  <option value="'Courier Prime', monospace">Courier Prime</option>
+  <option value="'Cabin', sans-serif">Cabin</option>
+  <option value="'Anton', sans-serif">Anton</option>
+  <option value="'Pacifico', cursive">Pacifico</option>
+  <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
+</select>
+
+
+  
+  
+
+
+  <!--
+
 <select id="fontSelector" onchange="changeFont(this.value)">
   <option value="'Fira Code', monospace">Fira Code</option>
   <option value="'Inter', sans-serif">Inter</option>
   <option value="'Playfair Display', serif">Playfair Display</option>
 </select>
 
+-->
+  
   <button onclick="applyRandomFont()">🎲 Random Font</button>
 
 
