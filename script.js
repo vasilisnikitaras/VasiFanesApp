@@ -45,14 +45,6 @@ document.addEventListener("keydown", function (event) {
 
 
 
-
-
-
-
-
-
-
-<script>
   function loadApp(url) {
     fetch(url)
       .then(response => {
@@ -67,4 +59,4 @@ document.addEventListener("keydown", function (event) {
         console.error("Error loading app:", error);
       });
   }
-</script>
+
