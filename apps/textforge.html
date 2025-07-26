@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <title>VasiTextForge</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter&family=Playfair+Display&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="../style.css" />
   <style>
     body {
@@ -41,10 +43,28 @@
     button:hover {
       background-color: var(--button-hover);
     }
+
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+textarea {
+  font-family: 'Fira Code', monospace;
+}
+
+h1 {
+  font-family: 'Playfair Display', serif;
+}
+    
   </style>
 </head>
 <body>
   <header>
+
+    <h2 id="previewHeadline" style="font-family: 'Inter', sans-serif;">Sample Preview</h2>
+
+    
     <h1>✒️ VasiTextForge</h1>
     <p>Text crafting at your fingertips.</p>
   </header>
@@ -57,6 +77,18 @@
       <button onclick="toTitleCase()">Title Case</button>
     </div>
   </section>
+
+
+<select id="fontSelector" onchange="changeFont(this.value)">
+  <option value="'Fira Code', monospace">Fira Code</option>
+  <option value="'Inter', sans-serif">Inter</option>
+  <option value="'Playfair Display', serif">Playfair Display</option>
+</select>
+
+  <button onclick="applyRandomFont()">🎲 Random Font</button>
+
+
+  
 
   <script>
     function toUppercase() {
@@ -76,5 +108,40 @@
         .join(" ");
     }
   </script>
+
+
+
+<script>
+function changeFont(font) {
+  document.getElementById("inputText").style.fontFamily = font;
+}
+
+</script>
+
+
+
+<script>
+function applyRandomFont() {
+  const fonts = [
+    "'Fira Code', monospace",
+    "'Inter', sans-serif",
+    "'Playfair Display', serif"
+  ];
+  const random = fonts[Math.floor(Math.random() * fonts.length)];
+  changeFont(random);
+}
+
+  
+</script>
+
+<script>
+  function changeFont(font) {
+  document.getElementById("inputText").style.fontFamily = font;
+  document.getElementById("previewHeadline").style.fontFamily = font;
+}
+
+</script>
+
+  
 </body>
 </html>
