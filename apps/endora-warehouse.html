@@ -4,15 +4,135 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Endora Warehouse</title>
+  <style>
+    body.modal-mode {
+      font-family: sans-serif;
+      background: #f4f4f4;
+      padding: 1rem;
+    }
+    header, footer {
+      display: none;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+    }
+    input, select, button {
+      display: block;
+      margin: 0.5rem 0;
+      padding: 0.5rem;
+      width: 100%;
+    }
+    .controls {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .item-list {
+      margin-top: 1rem;
+    }
+    .item {
+      background: #fff;
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body class="modal-mode">
+  <main class="container">
+    <h2>📦 Endora Warehouse</h2>
+    <input id="itemName" placeholder="Item name" />
+    <input id="itemQty" placeholder="Quantity" type="number" />
+    <select id="category">
+      <option>Furniture</option>
+      <option>Electronics</option>
+      <option>Books</option>
+      <option>Office Supplies</option>
+    </select>
+    <div class="controls">
+      <button id="addBtn">Add</button>
+      <button id="clearBtn">Clear</button>
+    </div>
+    <div id="itemsList" class="item-list"></div>
+  </main>
+
+  <script>
+    const itemName = document.getElementById("itemName");
+    const itemQty = document.getElementById("itemQty");
+    const category = document.getElementById("category");
+    const addBtn = document.getElementById("addBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const itemsList = document.getElementById("itemsList");
+
+    addBtn.onclick = () => {
+      const name = itemName.value.trim();
+      const qty = itemQty.value;
+      const cat = category.value;
+      if (!name || !qty) return alert("Fill all fields");
+
+      const item = document.createElement("div");
+      item.className = "item";
+      item.textContent = `${name} (${qty}) - ${cat}`;
+      itemsList.appendChild(item);
+
+      itemName.value = "";
+      itemQty.value = "";
+    };
+
+    clearBtn.onclick = () => {
+      itemsList.innerHTML = "";
+    };
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Endora Warehouse</title>
 
   <!-- Correct CSS -->
+<!--
   <link rel="stylesheet" href="endora-style.css" />
 
   <!-- JS Scripts -->
+<!--
   <script src="endora-script.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
 
   <!-- Optional modal styling -->
+<!--
   <style>
     body.modal-mode header,
     body.modal-mode footer {
