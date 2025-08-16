@@ -6,12 +6,12 @@
   <title>Endora Warehouse Pro</title>
   <style>
     body.modal-mode {
-      font-family: sans-serif;
-      background: #f4f4f4;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      color: #222;
       padding: 1rem;
       margin: 0;
       box-sizing: border-box;
-      color: #222;
     }
     header, footer {
       display: none;
@@ -28,6 +28,8 @@
       width: 100%;
       box-sizing: border-box;
       font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
     }
     .controls {
       display: flex;
@@ -47,14 +49,19 @@
       border: 1px solid #ccc;
       word-wrap: break-word;
     }
-    #barcodeImage {
+    #barcodeImage, #qrCanvas {
       margin-top: 1rem;
       display: block;
       max-width: 100%;
     }
     .dark-mode {
-      background: #222;
+      background: #1e1e1e;
       color: #eee;
+    }
+    .dark-mode input, .dark-mode select, .dark-mode button {
+      background: #2c2c2c;
+      color: #eee;
+      border: 1px solid #555;
     }
     @media (max-width: 480px) {
       h2 {
@@ -73,38 +80,56 @@
   <main class="container">
     <h2>📦 Endora Warehouse Pro</h2>
 
-    <input id="itemName" placeholder="Item name" />
-    <input id="itemQty" placeholder="Quantity" type="number" />
-    <input id="itemPrice" placeholder="Price per unit" type="number" />
-    <select id="category">
-      <option>Furniture</option>
-      <option>Electronics</option>
-      <option>Books</option>
-      <option>Office Supplies</option>
-    </select>
-
-    <div class="controls">
-      <button id="addBtn">Add</button>
-      <button id="clearBtn">Clear</button>
-      <button id="exportBtn">Export CSV</button>
-      <button onclick="toggleTheme()">🌗 Theme</button>
+    <!-- Login/Register Section -->
+    <div id="authSection">
+      <input id="username" placeholder="Username" />
+      <input id="password" type="password" placeholder="Password" />
+      <input id="confirmPassword" type="password" placeholder="Confirm Password (for register)" />
+      <div class="controls">
+        <button onclick="login()">Login</button>
+        <button onclick="register()">Register</button>
+      </div>
     </div>
 
-    <input id="barcodeInput" placeholder="Enter barcode value" />
-    <select id="barcodeType">
-      <option value="code128">Code128</option>
-      <option value="ean13">EAN13</option>
-      <option value="upc">UPC</option>
-    </select>
-    <button onclick="generateBarcode()">Generate Barcode</button>
-    <canvas id="barcodeImage"></canvas>
+    <!-- Main App Section -->
+    <div id="appSection" style="display:none;">
+      <input id="itemName" placeholder="Item name" />
+      <input id="itemQty" placeholder="Quantity" type="number" />
+      <input id="itemPrice" placeholder="Price per unit" type="number" />
+      <select id="category">
+        <option>Furniture</option>
+        <option>Electronics</option>
+        <option>Books</option>
+        <option>Office Supplies</option>
+      </select>
 
-    <input id="searchInput" placeholder="🔍 Search items..." />
+      <div class="controls">
+        <button id="addBtn">Add</button>
+        <button id="clearBtn">Clear</button>
+        <button id="exportBtn">Export CSV</button>
+        <button onclick="toggleTheme()">🌗 Theme</button>
+        <button onclick="scanBarcode()">📷 Scan</button>
+      </div>
 
-    <div id="itemsList" class="item-list"></div>
+      <input id="barcodeInput" placeholder="Enter barcode value" />
+      <select id="barcodeType">
+        <option value="code128">Code128</option>
+        <option value="ean13">EAN13</option>
+        <option value="upc">UPC</option>
+      </select>
+      <button onclick="generateBarcode()">Generate Barcode</button>
+      <canvas id="barcodeImage"></canvas>
+
+      <input id="searchInput" placeholder="🔍 Search items..." />
+      <div id="itemsList" class="item-list"></div>
+    </div>
   </main>
 
+  <!-- JS Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"></script>
+
+
   <script>
     const itemName = document.getElementById("itemName");
     const itemQty = document.getElementById("itemQty");
@@ -167,6 +192,11 @@
       });
     }
 
+    function scanBarcode() {
+      alert("📷 Barcode scanner activated (demo only)");
+      // Quagga.init({...}) can be added here for full implementation
+    }
+
     function exportCSV() {
       const rows = [["Name", "Qty", "Price", "Category"]];
       items.forEach(i => rows.push([i.name, i.qty, i.price, i.category]));
@@ -193,6 +223,32 @@
 
     applyTheme();
     renderItems();
+
+    // Login/Register logic (mock)
+    function login() {
+      const user = document.getElementById("username").value.trim();
+      const pass = document.getElementById("password").value.trim();
+      if (user === "VasilisFanes" && pass === "1234") {
+        document.getElementById("authSection").style.display = "none";
+        document.getElementById("appSection").style.display = "block";
+      } else {
+        alert("Invalid credentials");
+      }
+    }
+
+    function register() {
+      const user = document.getElementById("username").value.trim();
+      const pass = document.getElementById("password").value.trim();
+      const confirm = document.getElementById("confirmPassword").value.trim();
+      if (!user || !pass || !confirm) return alert("Fill all fields");
+      if (pass !== confirm) return alert("Passwords do not match");
+      alert("✅ Registered (mock only)");
+    }
   </script>
 </body>
 </html>
+
+
+
+
+  
