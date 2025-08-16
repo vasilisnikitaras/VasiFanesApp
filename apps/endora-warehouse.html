@@ -3,33 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Endora Warehouse Pro</title>
+  <title>📦 Endora Warehouse Pro</title>
   <style>
-    body.modal-mode {
+    body {
       font-family: 'Segoe UI', sans-serif;
       background: #f0f4f8;
       color: #222;
       padding: 1rem;
       margin: 0;
-      box-sizing: border-box;
+      transition: background 0.3s, color 0.3s;
     }
-    header, footer {
-      display: none;
+    .dark-mode {
+      background: #1e1e1e;
+      color: #eee;
     }
     .container {
-      width: 100%;
       max-width: 600px;
       margin: auto;
     }
     input, select, button {
-      display: block;
+      width: 100%;
       margin: 0.5rem 0;
       padding: 0.5rem;
-      width: 100%;
-      box-sizing: border-box;
       font-size: 1rem;
       border: 1px solid #ccc;
       border-radius: 4px;
+      box-sizing: border-box;
     }
     .controls {
       display: flex;
@@ -39,279 +38,174 @@
     .controls button {
       flex: 1 1 48%;
     }
-    .item-list {
-      margin-top: 1rem;
-    }
     .item {
       background: #fff;
       padding: 0.5rem;
       margin-bottom: 0.5rem;
       border: 1px solid #ccc;
-      word-wrap: break-word;
-    }
-    #barcodeImage, #qrCanvas {
-      margin-top: 1rem;
-      display: block;
-      max-width: 100%;
-    }
-    .dark-mode {
-      background: #1e1e1e;
-      color: #eee;
     }
     .dark-mode input, .dark-mode select, .dark-mode button {
       background: #2c2c2c;
       color: #eee;
       border: 1px solid #555;
     }
-    @media (max-width: 480px) {
-      h2 {
-        font-size: 1.2rem;
-      }
-      input, select, button {
-        font-size: 0.9rem;
-      }
-      .controls button {
-        flex: 1 1 100%;
-      }
-    }
   </style>
 </head>
-<body class="modal-mode">
+<body>
   <main class="container">
     <h2>📦 Endora Warehouse Pro</h2>
 
-    <!-- Login/Register Section -->
+    <!-- Login/Register -->
     <div id="authSection">
       <input id="username" placeholder="Username" />
       <input id="password" type="password" placeholder="Password" />
-      <input id="confirmPassword" type="password" placeholder="Confirm Password (for register)" />
+      <input id="confirm" type="password" placeholder="Confirm Password (for register)" />
       <div class="controls">
         <button onclick="login()">Login</button>
         <button onclick="register()">Register</button>
       </div>
     </div>
 
-    <!-- Main App Section -->
+    <!-- App Section -->
     <div id="appSection" style="display:none;">
+      <h3>Welcome, <span id="userDisplay"></span></h3>
       <input id="itemName" placeholder="Item name" />
-      <input id="itemQty" placeholder="Quantity" type="number" />
-      <input id="itemPrice" placeholder="Price per unit" type="number" />
+      <input id="itemQty" type="number" placeholder="Quantity" />
+      <input id="itemPrice" type="number" placeholder="Price per unit" />
       <select id="category">
         <option>Furniture</option>
         <option>Electronics</option>
         <option>Books</option>
         <option>Office Supplies</option>
       </select>
-
       <div class="controls">
-        <button id="addBtn">Add</button>
-        <button id="clearBtn">Clear</button>
-        <button id="exportBtn">Export CSV</button>
+        <button onclick="addItem()">Add</button>
+        <button onclick="clearItems()">Clear</button>
+        <button onclick="exportCSV()">Export CSV</button>
         <button onclick="toggleTheme()">🌗 Theme</button>
-        <button onclick="scanBarcode()">📷 Scan</button>
+        <button onclick="logout()">Logout</button>
       </div>
-
-      <input id="barcodeInput" placeholder="Enter barcode value" />
-      <select id="barcodeType">
-        <option value="code128">Code128</option>
-        <option value="ean13">EAN13</option>
-        <option value="upc">UPC</option>
-      </select>
-      <button onclick="generateBarcode()">Generate Barcode</button>
-      <canvas id="barcodeImage"></canvas>
-
       <input id="searchInput" placeholder="🔍 Search items..." />
-      <div id="itemsList" class="item-list"></div>
+      <div id="itemsList"></div>
     </div>
   </main>
 
-  <!-- JS Libraries -->
-  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"></script>
-
-
   <script>
-    const itemName = document.getElementById("itemName");
-    const itemQty = document.getElementById("itemQty");
-    const itemPrice = document.getElementById("itemPrice");
-    const category = document.getElementById("category");
-    const addBtn = document.getElementById("addBtn");
-    const clearBtn = document.getElementById("clearBtn");
-    const itemsList = document.getElementById("itemsList");
-    const searchInput = document.getElementById("searchInput");
+    const authSection = document.getElementById('authSection');
+    const appSection = document.getElementById('appSection');
+    const username = document.getElementById('username');
+    const password = document.getElementById('password');
+    const confirm = document.getElementById('confirm');
+    const userDisplay = document.getElementById('userDisplay');
+    const itemName = document.getElementById('itemName');
+    const itemQty = document.getElementById('itemQty');
+    const itemPrice = document.getElementById('itemPrice');
+    const category = document.getElementById('category');
+    const searchInput = document.getElementById('searchInput');
+    const itemsList = document.getElementById('itemsList');
 
-    let items = JSON.parse(localStorage.getItem("warehouseItems") || "[]");
+    let currentUser = null;
+    let users = JSON.parse(localStorage.getItem('users')) || {};
 
-    function renderItems() {
-      itemsList.innerHTML = "";
-      const query = searchInput.value.toLowerCase();
-      items.filter(i => i.name.toLowerCase().includes(query)).forEach(item => {
-        const div = document.createElement("div");
-        div.className = "item";
-        const total = item.qty * item.price;
-        div.textContent = `${item.name} (${item.qty}) - ${item.category} | $${total.toFixed(2)}`;
-        itemsList.appendChild(div);
-      });
+    window.onload = () => {
+      const session = localStorage.getItem('session');
+      if (session && users[session]) {
+        currentUser = session;
+        showApp();
+      }
+      if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+      }
+    };
+
+    function register() {
+      const user = username.value.trim();
+      const pass = password.value.trim();
+      const conf = confirm.value.trim();
+      if (!user || !pass || !conf) return alert('Fill all fields');
+      if (pass !== conf) return alert('Passwords do not match');
+      if (users[user]) return alert('User already exists');
+      users[user] = { password: pass, items: [] };
+      localStorage.setItem('users', JSON.stringify(users));
+      alert('✅ Registered');
     }
 
-    addBtn.onclick = () => {
+    function login() {
+      const user = username.value.trim();
+      const pass = password.value.trim();
+      if (!users[user] || users[user].password !== pass) {
+        return alert('❌ Invalid credentials');
+      }
+      currentUser = user;
+      localStorage.setItem('session', user);
+      showApp();
+    }
+
+    function logout() {
+      localStorage.removeItem('session');
+      currentUser = null;
+      authSection.style.display = 'block';
+      appSection.style.display = 'none';
+    }
+
+    function showApp() {
+      authSection.style.display = 'none';
+      appSection.style.display = 'block';
+      userDisplay.textContent = currentUser;
+      renderItems();
+    }
+
+    function addItem() {
       const name = itemName.value.trim();
       const qty = parseInt(itemQty.value);
       const price = parseFloat(itemPrice.value);
       const cat = category.value;
-      if (!name || !qty || !price) return alert("Fill all fields");
-
-      items.push({ name, qty, price, category: cat });
-      localStorage.setItem("warehouseItems", JSON.stringify(items));
+      if (!name || !qty || !price) return alert('Fill all fields');
+      users[currentUser].items.push({ name, qty, price, category: cat });
+      localStorage.setItem('users', JSON.stringify(users));
       renderItems();
+      itemName.value = '';
+      itemQty.value = '';
+      itemPrice.value = '';
+    }
 
-      itemName.value = "";
-      itemQty.value = "";
-      itemPrice.value = "";
-    };
-
-    clearBtn.onclick = () => {
-      items = [];
-      localStorage.removeItem("warehouseItems");
+    function clearItems() {
+      users[currentUser].items = [];
+      localStorage.setItem('users', JSON.stringify(users));
       renderItems();
-    };
+    }
+
+    function renderItems() {
+      itemsList.innerHTML = '';
+      const query = searchInput.value.toLowerCase();
+      users[currentUser].items
+        .filter(i => i.name.toLowerCase().includes(query))
+        .forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'item';
+          const total = item.qty * item.price;
+          div.textContent = `${item.name} (${item.qty}) - ${item.category} | $${total.toFixed(2)}`;
+          itemsList.appendChild(div);
+        });
+    }
 
     searchInput.oninput = renderItems;
 
-    function generateBarcode() {
-      const value = document.getElementById("barcodeInput").value.trim();
-      const type = document.getElementById("barcodeType").value;
-      const canvas = document.getElementById("barcodeImage");
-      if (!value) return alert("Enter barcode value");
-      JsBarcode(canvas, value, {
-        format: type,
-        lineColor: "#000",
-        width: 2,
-        height: 60,
-        displayValue: true,
-      });
-    }
-
-    function scanBarcode() {
-      alert("📷 Barcode scanner activated (demo only)");
-      // Quagga.init({...}) can be added here for full implementation
-    }
-
     function exportCSV() {
-      const rows = [["Name", "Qty", "Price", "Category"]];
-      items.forEach(i => rows.push([i.name, i.qty, i.price, i.category]));
-      const csv = rows.map(r => r.join(",")).join("\n");
-      const blob = new Blob([csv], { type: "text/csv" });
-      const link = document.createElement("a");
+      const rows = [['Name', 'Qty', 'Price', 'Category']];
+      users[currentUser].items.forEach(i => rows.push([i.name, i.qty, i.price, i.category]));
+      const csv = rows.map(r => r.join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
-      link.download = "warehouse.csv";
+      link.download = `${currentUser}_warehouse.csv`;
       link.click();
     }
 
-    document.getElementById("exportBtn").onclick = exportCSV;
-
     function toggleTheme() {
-      document.body.classList.toggle("dark-mode");
-      localStorage.setItem("theme", document.body.classList.contains("dark-mode") ? "dark" : "light");
-    }
-
-    function applyTheme() {
-      if (localStorage.getItem("theme") === "dark") {
-        document.body.classList.add("dark-mode");
-      }
-    }
-
-    applyTheme();
-    renderItems();
-
-    // Login/Register logic (mock)
-    function login() {
-      const user = document.getElementById("username").value.trim();
-      const pass = document.getElementById("password").value.trim();
-      if (user === "VasilisFanes" && pass === "1234") {
-        document.getElementById("authSection").style.display = "none";
-        document.getElementById("appSection").style.display = "block";
-      } else {
-        alert("Invalid credentials");
-      }
-    }
-
-    function register() {
-      const user = document.getElementById("username").value.trim();
-      const pass = document.getElementById("password").value.trim();
-      const confirm = document.getElementById("confirmPassword").value.trim();
-      if (!user || !pass || !confirm) return alert("Fill all fields");
-      if (pass !== confirm) return alert("Passwords do not match");
-      alert("✅ Registered (mock only)");
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
     }
   </script>
-
-
-<script>
-const authSection = document.getElementById('auth');
-const appSection = document.getElementById('app');
-const username = document.getElementById('username');
-const password = document.getElementById('password');
-const confirm = document.getElementById('confirm');
-const userDisplay = document.getElementById('userDisplay');
-
-// Check session on load
-window.onload = () => {
-  const sessionUser = localStorage.getItem('session');
-  if (sessionUser) {
-    showApp(sessionUser);
-  }
-};
-
-function register() {
-  const user = username.value.trim();
-  const pass = password.value.trim();
-  const conf = confirm.value.trim();
-  if (!user || !pass || !conf) return alert('Fill all fields');
-  if (pass !== conf) return alert('Passwords do not match');
-
-  const users = JSON.parse(localStorage.getItem('users')) || {};
-  if (users[user]) return alert('User already exists');
-
-  users[user] = { password: pass, data: {}, preferences: {} };
-  localStorage.setItem('users', JSON.stringify(users));
-  alert('✅ Registered');
-}
-
-function login() {
-  const user = username.value.trim();
-  const pass = password.value.trim();
-  const users = JSON.parse(localStorage.getItem('users')) || {};
-  if (!users[user] || users[user].password !== pass) {
-    return alert('❌ Invalid credentials');
-  }
-  localStorage.setItem('session', user);
-  showApp(user);
-}
-
-function logout() {
-  localStorage.removeItem('session');
-  authSection.style.display = 'block';
-  appSection.style.display = 'none';
-  username.value = '';
-  password.value = '';
-  confirm.value = '';
-}
-
-function showApp(user) {
-  authSection.style.display = 'none';
-  appSection.style.display = 'block';
-  userDisplay.textContent = user;
-  // Optional: Load user-specific data here
-}
-</script>
-
-
-  
 </body>
 </html>
-
-
-
-
-  
