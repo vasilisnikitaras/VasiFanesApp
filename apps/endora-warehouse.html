@@ -245,6 +245,69 @@
       alert("✅ Registered (mock only)");
     }
   </script>
+
+
+<script>
+const authSection = document.getElementById('auth');
+const appSection = document.getElementById('app');
+const username = document.getElementById('username');
+const password = document.getElementById('password');
+const confirm = document.getElementById('confirm');
+const userDisplay = document.getElementById('userDisplay');
+
+// Check session on load
+window.onload = () => {
+  const sessionUser = localStorage.getItem('session');
+  if (sessionUser) {
+    showApp(sessionUser);
+  }
+};
+
+function register() {
+  const user = username.value.trim();
+  const pass = password.value.trim();
+  const conf = confirm.value.trim();
+  if (!user || !pass || !conf) return alert('Fill all fields');
+  if (pass !== conf) return alert('Passwords do not match');
+
+  const users = JSON.parse(localStorage.getItem('users')) || {};
+  if (users[user]) return alert('User already exists');
+
+  users[user] = { password: pass, data: {}, preferences: {} };
+  localStorage.setItem('users', JSON.stringify(users));
+  alert('✅ Registered');
+}
+
+function login() {
+  const user = username.value.trim();
+  const pass = password.value.trim();
+  const users = JSON.parse(localStorage.getItem('users')) || {};
+  if (!users[user] || users[user].password !== pass) {
+    return alert('❌ Invalid credentials');
+  }
+  localStorage.setItem('session', user);
+  showApp(user);
+}
+
+function logout() {
+  localStorage.removeItem('session');
+  authSection.style.display = 'block';
+  appSection.style.display = 'none';
+  username.value = '';
+  password.value = '';
+  confirm.value = '';
+}
+
+function showApp(user) {
+  authSection.style.display = 'none';
+  appSection.style.display = 'block';
+  userDisplay.textContent = user;
+  // Optional: Load user-specific data here
+}
+</script>
+
+
+  
 </body>
 </html>
 
