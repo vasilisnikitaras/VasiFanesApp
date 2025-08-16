@@ -1,20 +1,15 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
-<head> 
+<head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Endora Warehouse</title>
 
-  <!-- Correct CSS path -->
-<!--  <link rel="stylesheet" href="endora-style.css" /> -->
+  <!-- Correct CSS -->
+  <link rel="stylesheet" href="endora-style.css" />
 
-  <!-- JS scripts -->
- <!-- <script src="endora-script.js" defer></script> -->
-
-<link rel="stylesheet" href="endora-style.css" />
-<script src="endora-script.js" defer></script>
-
-  
+  <!-- JS Scripts -->
+  <script src="endora-script.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
 
   <!-- Optional modal styling -->
@@ -30,7 +25,7 @@
 </head>
 <body class="modal-mode">
   <header>
-    <h1>Endora Warehouse</h1>
+    <h1>📦 Endora Warehouse</h1>
     <select id="language">
       <option value="en">English</option>
       <option value="el">Ελληνικά</option>
@@ -74,77 +69,3 @@
   <footer>© Endora Warehouse by Vasilis Nikitaras</footer>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-<!--<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
-  <title>Endora Warehouse</title>
-  <link rel="stylesheet" href="css/style.css" />
-<link rel="stylesheet" href="endora-style.css" />
-
-  <link rel="stylesheet" href="../Endora-Warehouse/css/style.css" />
-<script src="endora-script.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
-
-</head>
-<body>
-  <header>
-    <h1>Endora Warehouse</h1>
-    <select id="language">
-      <option value="en">English</option>
-      <option value="el">Ελληνικά</option>
-      <option value="fr">Français</option>
-    </select>
-    <button id="themeBtn">Dark Mode</button>
-    <button id="logoutBtn">Disconnect</button>
-  </header>
-
-  <main class="container">
-    <input id="itemName" placeholder="Item name" />
-    <input id="itemQty" placeholder="Quantity" type="number" />
-    <select id="category">
-      <option>Furniture</option>
-      <option>Electronics</option>
-      <option>Books</option>
-      <option>Office Supplies</option>
-    </select>
-
-    <div class="controls">
-      <button id="addBtn">Add</button>
-      <button id="clearBtn">Clear</button>
-      <button id="exportBtn">📤 Export CSV</button>
-      <button id="scanBtn">Scan Barcode</button>
-    </div>
-
-    <input id="searchBar" placeholder="Search..." />
-    <input id="barcodeInput" placeholder="Enter barcode value" />
-    <select id="barcodeType">
-      <option value="Code128">Code128</option>
-      <option value="EAN13">EAN13</option>
-      <option value="UPC">UPC</option>
-    </select>
-    <button onclick="generateBarcode()">Generate Barcode</button>
-    <img id="barcodeImage" />
-
-    <div id="scanner"></div>
-    <div id="itemsList" class="item-list"></div>
-  </main>
-
-  <footer>© Endora Warehouse by Vasilis Nikitaras</footer>
-  <script src="js/script.js" defer></script>
-</body>
-</html>
--->
