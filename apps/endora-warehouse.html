@@ -3,17 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Endora Warehouse</title>
+  <title>Endora Warehouse Pro</title>
   <style>
     body.modal-mode {
       font-family: sans-serif;
-      background: #f9f9f9;
+      background: #f4f4f4;
       padding: 1rem;
+      margin: 0;
+      box-sizing: border-box;
+      color: #222;
     }
     header, footer {
       display: none;
     }
     .container {
+      width: 100%;
       max-width: 600px;
       margin: auto;
     }
@@ -22,11 +26,16 @@
       margin: 0.5rem 0;
       padding: 0.5rem;
       width: 100%;
+      box-sizing: border-box;
+      font-size: 1rem;
     }
     .controls {
       display: flex;
-      gap: 0.5rem;
       flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .controls button {
+      flex: 1 1 48%;
     }
     .item-list {
       margin-top: 1rem;
@@ -36,28 +45,49 @@
       padding: 0.5rem;
       margin-bottom: 0.5rem;
       border: 1px solid #ccc;
+      word-wrap: break-word;
     }
     #barcodeImage {
       margin-top: 1rem;
       display: block;
       max-width: 100%;
     }
+    .dark-mode {
+      background: #222;
+      color: #eee;
+    }
+    @media (max-width: 480px) {
+      h2 {
+        font-size: 1.2rem;
+      }
+      input, select, button {
+        font-size: 0.9rem;
+      }
+      .controls button {
+        flex: 1 1 100%;
+      }
+    }
   </style>
 </head>
 <body class="modal-mode">
   <main class="container">
-    <h2>📦 Endora Warehouse</h2>
+    <h2>📦 Endora Warehouse Pro</h2>
+
     <input id="itemName" placeholder="Item name" />
     <input id="itemQty" placeholder="Quantity" type="number" />
+    <input id="itemPrice" placeholder="Price per unit" type="number" />
     <select id="category">
       <option>Furniture</option>
       <option>Electronics</option>
       <option>Books</option>
       <option>Office Supplies</option>
     </select>
+
     <div class="controls">
       <button id="addBtn">Add</button>
       <button id="clearBtn">Clear</button>
+      <button id="exportBtn">Export CSV</button>
+      <button onclick="toggleTheme()">🌗 Theme</button>
     </div>
 
     <input id="barcodeInput" placeholder="Enter barcode value" />
@@ -69,6 +99,8 @@
     <button onclick="generateBarcode()">Generate Barcode</button>
     <canvas id="barcodeImage"></canvas>
 
+    <input id="searchInput" placeholder="🔍 Search items..." />
+
     <div id="itemsList" class="item-list"></div>
   </main>
 
@@ -76,49 +108,91 @@
   <script>
     const itemName = document.getElementById("itemName");
     const itemQty = document.getElementById("itemQty");
+    const itemPrice = document.getElementById("itemPrice");
     const category = document.getElementById("category");
     const addBtn = document.getElementById("addBtn");
     const clearBtn = document.getElementById("clearBtn");
     const itemsList = document.getElementById("itemsList");
+    const searchInput = document.getElementById("searchInput");
+
+    let items = JSON.parse(localStorage.getItem("warehouseItems") || "[]");
+
+    function renderItems() {
+      itemsList.innerHTML = "";
+      const query = searchInput.value.toLowerCase();
+      items.filter(i => i.name.toLowerCase().includes(query)).forEach(item => {
+        const div = document.createElement("div");
+        div.className = "item";
+        const total = item.qty * item.price;
+        div.textContent = `${item.name} (${item.qty}) - ${item.category} | $${total.toFixed(2)}`;
+        itemsList.appendChild(div);
+      });
+    }
 
     addBtn.onclick = () => {
       const name = itemName.value.trim();
-      const qty = itemQty.value;
+      const qty = parseInt(itemQty.value);
+      const price = parseFloat(itemPrice.value);
       const cat = category.value;
-      if (!name || !qty) return alert("Fill all fields");
+      if (!name || !qty || !price) return alert("Fill all fields");
 
-      const item = document.createElement("div");
-      item.className = "item";
-      item.textContent = `${name} (${qty}) - ${cat}`;
-      itemsList.appendChild(item);
+      items.push({ name, qty, price, category: cat });
+      localStorage.setItem("warehouseItems", JSON.stringify(items));
+      renderItems();
 
       itemName.value = "";
       itemQty.value = "";
+      itemPrice.value = "";
     };
 
     clearBtn.onclick = () => {
-      itemsList.innerHTML = "";
+      items = [];
+      localStorage.removeItem("warehouseItems");
+      renderItems();
     };
+
+    searchInput.oninput = renderItems;
 
     function generateBarcode() {
       const value = document.getElementById("barcodeInput").value.trim();
       const type = document.getElementById("barcodeType").value;
       const canvas = document.getElementById("barcodeImage");
-
       if (!value) return alert("Enter barcode value");
+      JsBarcode(canvas, value, {
+        format: type,
+        lineColor: "#000",
+        width: 2,
+        height: 60,
+        displayValue: true,
+      });
+    }
 
-      try {
-        JsBarcode(canvas, value, {
-          format: type,
-          lineColor: "#000",
-          width: 2,
-          height: 60,
-          displayValue: true,
-        });
-      } catch (e) {
-        alert("Invalid barcode format or value");
+    function exportCSV() {
+      const rows = [["Name", "Qty", "Price", "Category"]];
+      items.forEach(i => rows.push([i.name, i.qty, i.price, i.category]));
+      const csv = rows.map(r => r.join(",")).join("\n");
+      const blob = new Blob([csv], { type: "text/csv" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "warehouse.csv";
+      link.click();
+    }
+
+    document.getElementById("exportBtn").onclick = exportCSV;
+
+    function toggleTheme() {
+      document.body.classList.toggle("dark-mode");
+      localStorage.setItem("theme", document.body.classList.contains("dark-mode") ? "dark" : "light");
+    }
+
+    function applyTheme() {
+      if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark-mode");
       }
     }
+
+    applyTheme();
+    renderItems();
   </script>
 </body>
 </html>
