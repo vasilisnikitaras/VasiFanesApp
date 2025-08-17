@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>📦 Endora Warehouse Pro</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+
+  <title>📦 Endora Warehouse Pro</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -50,52 +51,30 @@
       color: #eee;
       border: 1px solid #555;
     }
-    #previewModal {
-      position: fixed;
-      top: 10%;
-      left: 10%;
-      width: 80%;
-      height: 70%;
-      background: #fff;
-      border: 1px solid #ccc;
-      padding: 1rem;
-      overflow: auto;
-      z-index: 9999;
-    }
-    .dark-mode #previewModal {
-      background: #2c2c2c;
-      color: #eee;
-      border: 1px solid #555;
-    }
   </style>
 </head>
 <body>
   <main class="container">
     <h2>📦 Endora Warehouse Pro</h2>
 
-    <select id="languageSelect" onchange="setLanguage(this.value)">
-      <option value="en">English</option>
-      <option value="fr">Français</option>
-      <option value="el">Ελληνικά</option>
-    </select>
-
+    <!-- Login/Register -->
     <div id="authSection">
       <input id="username" placeholder="Username" />
       <input id="password" type="password" placeholder="Password" />
-      <input id="confirm" type="password" placeholder="Confirm Password" />
+      <input id="confirm" type="password" placeholder="Confirm Password (for register)" style="display:none;" />
       <div class="controls">
-        <button onclick="login()">Login</button>
-        <button onclick="register()">Register</button>
+        <button onclick="showLoginFields(); login()">Login</button>
+        <button onclick="showRegisterFields(); register()">Register</button>
       </div>
     </div>
 
+    <!-- App Section -->
     <div id="appSection" style="display:none;">
-      <h3><span id="welcomeText">Welcome</span>, <span id="userDisplay"></span></h3>
+      <h3>Welcome, <span id="userDisplay"></span></h3>
       <input id="itemName" placeholder="Item name" />
-      <input id="itemBarcode" placeholder="Barcode" />
-      <button onclick="startBarcodeScanner()">📷 Scan Barcode</button>
       <input id="itemQty" type="number" placeholder="Quantity" />
       <input id="itemPrice" type="number" placeholder="Price per unit" />
+      <input id="itemBarcode" placeholder="Barcode (optional)" />
       <select id="category">
         <option>Furniture</option>
         <option>Electronics</option>
@@ -111,207 +90,190 @@
       </div>
       <input id="searchInput" placeholder="🔍 Search items..." />
       <div id="itemsList"></div>
+      <div id="scanner" style="display:none;">
+  <video id="scannerPreview" style="width:100%; border:1px solid #ccc;"></video>
+  <button onclick="stopScanner()">🛑 Stop Scanner</button>
+</div>
+<button onclick="startScanner()">📷 Scan Barcode</button>
+
     </div>
   </main>
 
-  <script>
-    const authSection = document.getElementById('authSection');
-    const appSection = document.getElementById('appSection');
-    const username = document.getElementById('username');
-    const password = document.getElementById('password');
-    const confirm = document.getElementById('confirm');
-    const userDisplay = document.getElementById('userDisplay');
-    const itemName = document.getElementById('itemName');
-    const itemBarcode = document.getElementById('itemBarcode');
-    const itemQty = document.getElementById('itemQty');
-    const itemPrice = document.getElementById('itemPrice');
-    const category = document.getElementById('category');
-    const searchInput = document.getElementById('searchInput');
-    const itemsList = document.getElementById('itemsList');
-    const welcomeText = document.getElementById('welcomeText');
+<script>
+  const authSection = document.getElementById('authSection');
+  const appSection = document.getElementById('appSection');
+  const username = document.getElementById('username');
+  const password = document.getElementById('password');
+  const confirm = document.getElementById('confirm');
+  const userDisplay = document.getElementById('userDisplay');
+  const itemName = document.getElementById('itemName');
+  const itemQty = document.getElementById('itemQty');
+  const itemPrice = document.getElementById('itemPrice');
+  const itemBarcode = document.getElementById('itemBarcode');
+  const category = document.getElementById('category');
+  const searchInput = document.getElementById('searchInput');
+  const itemsList = document.getElementById('itemsList');
 
-    let currentUser = null;
-    let users = JSON.parse(localStorage.getItem('users')) || {};
+  let currentUser = null;
+  let users = JSON.parse(localStorage.getItem('users')) || {};
 
-    const translations = {
-      en: { welcome: "Welcome", add: "Add", clear: "Clear", logout: "Logout" },
-      fr: { welcome: "Bienvenue", add: "Ajouter", clear: "Effacer", logout: "Déconnexion" },
-      el: { welcome: "Καλώς ήρθες", add: "Προσθήκη", clear: "Καθαρισμός", logout: "Αποσύνδεση" }
-    };
-
-    function setLanguage(lang) {
-      localStorage.setItem('language', lang);
-      welcomeText.textContent = translations[lang].welcome;
-      document.querySelector('button[onclick="addItem()"]').textContent = translations[lang].add;
-      document.querySelector('button[onclick="clearItems()"]').textContent = translations[lang].clear;
-      document.querySelector('button[onclick="logout()"]').textContent = translations[lang].logout;
-    }
-
-    window.onload = () => {
-      const session = localStorage.getItem('session');
-      if (session && users[session]) {
-        currentUser = session;
-        showApp();
-      }
-
-      const savedUser = localStorage.getItem('savedUser');
-      const savedPass = localStorage.getItem('savedPass');
-      if (savedUser && savedPass) {
-        username.value = savedUser;
-        password.value = savedPass;
-      }
-
-      const lang = localStorage.getItem('language') || 'en';
-      document.getElementById('languageSelect').value = lang;
-      setLanguage(lang);
-
-      if (localStorage.getItem('theme') === 'dark') {
-        document.body.classList.add('dark-mode');
-      }
-    };
-
-    function register() {
-      const user = username.value.trim();
-      const pass = password.value.trim();
-      const conf = confirm.value.trim();
-      if (!user || !pass || !conf) return alert('Fill all fields');
-      if (pass !== conf) return alert('Passwords do not match');
-      if (users[user]) return alert('User already exists');
-      users[user] = { password: pass, items: [] };
-      localStorage.setItem('users', JSON.stringify(users));
-      alert('✅ Registered');
-      if (confirm("Do you want to save your password for future logins?")) {
-        localStorage.setItem('savedUser', user);
-        localStorage.setItem('savedPass', pass);
-      }
-    }
-
-    function login() {
-      const user = username.value.trim();
-      const pass = password.value.trim();
-      if (!users[user] || users[user].password !== pass) {
-        return alert('❌ Invalid credentials');
-      }
-      currentUser = user;
-      localStorage.setItem('session', user);
+  window.onload = () => {
+    const session = localStorage.getItem('session');
+    if (session && users[session]) {
+      currentUser = session;
       showApp();
     }
-
-    function logout() {
-      localStorage.removeItem('session');
-      currentUser = null;
-      authSection.style.display = 'block';
-      appSection.style.display = 'none';
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark-mode');
     }
+  };
 
-    function showApp() {
-      authSection.style.display = 'none';
-      appSection.style.display = 'block';
-      userDisplay.textContent = currentUser;
-      renderItems();
+  function showLoginFields() {
+    confirm.style.display = 'none';
+  }
+
+  function showRegisterFields() {
+    confirm.style.display = 'block';
+  }
+
+  function register() {
+    const user = username.value.trim();
+    const pass = password.value.trim();
+    const conf = confirm.value.trim();
+    if (!user || !pass || !conf) return alert('Fill all fields');
+    if (pass !== conf) return alert('Passwords do not match');
+    if (users[user]) return alert('User already exists');
+    users[user] = { password: pass, items: [] };
+    localStorage.setItem('users', JSON.stringify(users));
+    currentUser = user;
+    localStorage.setItem('session', user);
+    showApp();
+  }
+
+  function login() {
+    const user = username.value.trim();
+    const pass = password.value.trim();
+    if (!users[user] || users[user].password !== pass) {
+      return alert('❌ Invalid credentials');
     }
+    currentUser = user;
+    localStorage.setItem('session', user);
+    showApp();
+  }
 
-    function addItem() {
-      const name = itemName.value.trim();
-      const barcode = itemBarcode.value.trim();
-      const qty = parseInt(itemQty.value);
-      const price = parseFloat(itemPrice.value);
-      const cat = category.value;
-      if (!name || !qty || !price) return alert('Fill all fields');
-     /* users[currentUser].items.push({ name, barcode, qty, price, category:*/
-            users[currentUser].items.push({ name, barcode, qty, price, category: cat });
-      localStorage.setItem('users', JSON.stringify(users));
-      renderItems();
-      itemName.value = '';
-      itemBarcode.value = '';
-      itemQty.value = '';
-      itemPrice.value = '';
-    }
+  function logout() {
+    localStorage.removeItem('session');
+    currentUser = null;
+    authSection.style.display = 'block';
+    appSection.style.display = 'none';
+    if (window.Quagga) Quagga.stop(); // Stop scanner if active
+  }
 
-    function clearItems() {
-      users[currentUser].items = [];
-      localStorage.setItem('users', JSON.stringify(users));
-      renderItems();
-    }
+  function showApp() {
+    authSection.style.display = 'none';
+    appSection.style.display = 'block';
+    userDisplay.textContent = currentUser;
+    renderItems();
+  }
 
-    function renderItems() {
-      itemsList.innerHTML = '';
-      const query = searchInput.value.toLowerCase();
-      users[currentUser].items
-        .filter(i => i.name.toLowerCase().includes(query))
-        .forEach(item => {
-          const div = document.createElement('div');
-          div.className = 'item';
-          const total = item.qty * item.price;
-          div.textContent = `${item.name} (${item.qty} @ $${item.price.toFixed(2)}) - ${item.category} | Total: $${total.toFixed(2)}`;
-          itemsList.appendChild(div);
-        });
-    }
+  function addItem() {
+    const name = itemName.value.trim();
+    const qty = parseInt(itemQty.value);
+    const price = parseFloat(itemPrice.value);
+    const cat = category.value;
+    const barcode = itemBarcode.value.trim();
+    if (!name || !qty || !price) return alert('Fill all fields');
+    users[currentUser].items.push({ name, qty, price, category: cat, barcode });
+    localStorage.setItem('users', JSON.stringify(users));
+    renderItems();
+    itemName.value = '';
+    itemQty.value = '';
+    itemPrice.value = '';
+    itemBarcode.value = '';
+  }
 
-    searchInput.oninput = renderItems;
+  function clearItems() {
+    users[currentUser].items = [];
+    localStorage.setItem('users', JSON.stringify(users));
+    renderItems();
+  }
 
-    function exportCSV() {
-      const rows = [['Name', 'Barcode', 'Qty', 'Price', 'Category']];
-      users[currentUser].items.forEach(i => rows.push([i.name, i.barcode, i.qty, i.price, i.category]));
-      const csv = rows.map(r => r.join(',')).join('\n');
-
-      const preview = document.createElement('div');
-      preview.id = 'previewModal';
-      preview.innerHTML = `
-        <h3>CSV Preview</h3>
-        <pre>${csv}</pre>
-        <button onclick="downloadCSV()">Download CSV</button>
-        <button onclick="document.getElementById('previewModal').remove()">Close</button>
-      `;
-      document.body.appendChild(preview);
-    }
-
-    function downloadCSV() {
-      const rows = [['Name', 'Barcode', 'Qty', 'Price', 'Category']];
-      users[currentUser].items.forEach(i => rows.push([i.name, i.barcode, i.qty, i.price, i.category]));
-      const csv = rows.map(r => r.join(',')).join('\n');
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = `${currentUser}_warehouse.csv`;
-      link.click();
-    }
-
-    function toggleTheme() {
-      document.body.classList.toggle('dark-mode');
-      localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-    }
-
-    function startBarcodeScanner() {
-      Quagga.init({
-        inputStream: {
-          name: "Live",
-          type: "LiveStream",
-          target: document.body
-        },
-        decoder: {
-          readers: ["code_128_reader", "ean_reader", "ean_8_reader"]
-        }
-      }, function(err) {
-        if (err) return console.error(err);
-        Quagga.start();
+  function renderItems() {
+    itemsList.innerHTML = '';
+    const query = searchInput.value.toLowerCase();
+    users[currentUser].items
+      .filter(i => i.name.toLowerCase().includes(query))
+      .forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        const total = item.qty * item.price;
+        div.innerHTML = `
+          <strong>${item.name}</strong> (${item.qty} @ $${item.price.toFixed(2)})<br>
+          Category: ${item.category}<br>
+          Barcode: <code>${item.barcode || '—'}</code><br>
+          Total: $${total.toFixed(2)}
+        `;
+        itemsList.appendChild(div);
       });
+  }
 
-      Quagga.onDetected(data => {
-        const code = data.codeResult.code;
-        itemBarcode.value = code;
-        Quagga.stop();
-      });
+  searchInput.oninput = renderItems;
+
+  function exportCSV() {
+    const rows = [['Name', 'Qty', 'Price', 'Category', 'Barcode']];
+    users[currentUser].items.forEach(i =>
+      rows.push([i.name, i.qty, i.price, i.category, i.barcode || ''])
+    );
+    const csv = rows.map(r => r.join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `${currentUser}_warehouse.csv`;
+    link.click();
+  }
+
+  function toggleTheme() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+  }
+
+
+function startScanner() {
+  document.getElementById('scanner').style.display = 'block';
+  Quagga.init({
+    inputStream: {
+      name: 'Live',
+      type: 'LiveStream',
+      target: document.querySelector('#scannerPreview'),
+      constraints: {
+        facingMode: 'environment'
+      }
+    },
+    decoder: {
+      readers: ['code_128_reader', 'ean_reader', 'ean_8_reader']
     }
-  </script>
-</body>
+  }, err => {
+    if (err) return console.error(err);
+    Quagga.start();
+  });
+
+  Quagga.onDetected(data => {
+    const code = data.codeResult.code;
+    itemBarcode.value = code;
+    stopScanner();
+  });
+}
+
+function stopScanner() {
+  Quagga.stop();
+  document.getElementById('scanner').style.display = 'none';
+}
+
+  
+</script>
+
+
+
+
+  </body>
 </html>
-
-
-
-
-
-
-
-
-                                     
