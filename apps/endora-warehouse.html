@@ -191,6 +191,7 @@
 
     searchInput.oninput = renderItems;
 
+/*
     function exportCSV() {
       const rows = [['Name', 'Qty', 'Price', 'Category']];
       users[currentUser].items.forEach(i => rows.push([i.name, i.qty, i.price, i.category]));
@@ -201,7 +202,49 @@
       link.download = `${currentUser}_warehouse.csv`;
       link.click();
     }
+  */
 
+function exportCSV() {
+  const rows = [['Name', 'Qty', 'Price', 'Category']];
+  users[currentUser].items.forEach(i => rows.push([i.name, i.qty, i.price, i.category]));
+  const csv = rows.map(r => r.join(',')).join('\n');
+
+  // Create preview modal
+  const preview = document.createElement('div');
+  preview.style.position = 'fixed';
+  preview.style.top = '10%';
+  preview.style.left = '10%';
+  preview.style.width = '80%';
+  preview.style.height = '70%';
+  preview.style.background = '#fff';
+  preview.style.border = '1px solid #ccc';
+  preview.style.padding = '1rem';
+  preview.style.overflow = 'auto';
+  preview.style.zIndex = '9999';
+  preview.innerHTML = `
+    <h3>CSV Preview</h3>
+    <pre>${csv}</pre>
+    <button id="downloadCSV">Download CSV</button>
+    <button onclick="this.parentElement.remove()">Close</button>
+  `;
+  document.body.appendChild(preview);
+
+  // Add download functionality
+  document.getElementById('downloadCSV').onclick = () => {
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `${currentUser}_warehouse.csv`;
+    link.click();
+  };
+}
+
+
+
+
+
+
+    
     function toggleTheme() {
       document.body.classList.toggle('dark-mode');
       localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
