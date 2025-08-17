@@ -2,6 +2,11 @@
 if (!localStorage.getItem("loggedInUser")) {
   window.location.href = "login.html";
 }
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/apps/sw.js")
+    .then(() => console.log("✅ Service Worker registered"))
+    .catch(err => console.error("❌ SW registration failed:", err));
+}
 
 // DOM Elements
 const itemNameInput = document.getElementById("itemName");
