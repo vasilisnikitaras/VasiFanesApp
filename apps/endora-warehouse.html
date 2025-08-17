@@ -4,54 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>📦 Endora Warehouse Pro</title>
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f0f4f8;
-      color: #222;
-      padding: 1rem;
-      margin: 0;
-      transition: background 0.3s, color 0.3s;
-    }
-    .dark-mode {
-      background: #1e1e1e;
-      color: #eee;
-    }
-    .container {
-      max-width: 600px;
-      margin: auto;
-    }
-    input, select, button {
-      width: 100%;
-      margin: 0.5rem 0;
-      padding: 0.5rem;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-    .controls button {
-      flex: 1 1 48%;
-    }
-    .item {
-      background: #fff;
-      padding: 0.5rem;
-      margin-bottom: 0.5rem;
-      border: 1px solid #ccc;
-    }
-    .dark-mode input, .dark-mode select, .dark-mode button {
-      background: #2c2c2c;
-      color: #eee;
-      border: 1px solid #555;
-    }
+    body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; color: #222; padding: 1rem; margin: 0; transition: background 0.3s, color 0.3s; }
+    .dark-mode { background: #1e1e1e; color: #eee; }
+    .container { max-width: 600px; margin: auto; }
+    input, select, button { width: 100%; margin: 0.5rem 0; padding: 0.5rem; font-size: 1rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    .controls { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .controls button { flex: 1 1 48%; }
+    .item { background: #fff; padding: 0.5rem; margin-bottom: 0.5rem; border: 1px solid #ccc; }
+    .dark-mode input, .dark-mode select, .dark-mode button { background: #2c2c2c; color: #eee; border: 1px solid #555; }
   </style>
 </head>
-  <body>
+<body>
   <main class="container">
     <h2>📦 Endora Warehouse Pro</h2>
 
@@ -65,9 +30,10 @@
         <button onclick="register()">Register</button>
       </div>
     </div>
+
     <!-- App Section -->
     <div id="appSection" style="display:none;">
-      <h3>Welcome, <span id="userDisplay"></span></h3>
+      <h3><span id="welcomeText">Welcome</span>, <span id="userDisplay"></span></h3>
       <input id="itemName" placeholder="Item name" />
       <input id="itemQty" type="number" placeholder="Quantity" />
       <input id="itemPrice" type="number" placeholder="Price per unit" />
@@ -85,125 +51,194 @@
         <button onclick="logout()">Logout</button>
       </div>
       <input id="searchInput" placeholder="🔍 Search items..." />
+      <select id="filterCategory">
+        <option value="">All Categories</option>
+        <option>Furniture</option>
+        <option>Electronics</option>
+        <option>Books</option>
+        <option>Office Supplies</option>
+      </select>
+      <input id="scanInput" placeholder="📷 Scan barcode..." />
+      <button onclick="scanBarcode()">Scan</button>
+      <select id="languageSelect" onchange="setLanguage()">
+        <option value="en">English</option>
+        <option value="fr">Français</option>
+        <option value="el">Ελληνικά</option>
+      </select>
       <div id="itemsList"></div>
     </div>
-  </main>
-<script>
-  const authSection = document.getElementById('authSection');
-  const appSection = document.getElementById('appSection');
-  const username = document.getElementById('username');
-  const password = document.getElementById('password');
-  const confirm = document.getElementById('confirm');
-  const userDisplay = document.getElementById('userDisplay');
-  const itemName = document.getElementById('itemName');
-  const itemQty = document.getElementById('itemQty');
-  const itemPrice = document.getElementById('itemPrice');
-  const category = document.getElementById('category');
-  const searchInput = document.getElementById('searchInput');
-  const itemsList = document.getElementById('itemsList');
+const authSection = document.getElementById('authSection');
+const appSection = document.getElementById('appSection');
+const username = document.getElementById('username');
+const password = document.getElementById('password');
+const confirm = document.getElementById('confirm');
+const userDisplay = document.getElementById('userDisplay');
+const itemName = document.getElementById('itemName');
+const itemQty = document.getElementById('itemQty');
+const itemPrice = document.getElementById('itemPrice');
+const category = document.getElementById('category');
+const searchInput = document.getElementById('searchInput');
+const itemsList = document.getElementById('itemsList');
+const filterCategory = document.getElementById('filterCategory');
+const scanInput = document.getElementById('scanInput');
+const languageSelect = document.getElementById('languageSelect');
+const welcomeText = document.getElementById('welcomeText');
 
-  let currentUser = null;
-  let users = JSON.parse(localStorage.getItem('users')) || {};
+let currentUser = null;
+let currentLang = 'en';
+let users = JSON.parse(localStorage.getItem('users')) || {};
 
-  window.onload = () => {
-    const session = localStorage.getItem('session');
-    if (session && users[session]) {
-      currentUser = session;
-      showApp();
-    }
-    if (localStorage.getItem('theme') === 'dark') {
-      document.body.classList.add('dark-mode');
-    }
-  };
+const translations = {
+  en: { welcome: "Welcome", add: "Add", clear: "Clear", export: "Export CSV", theme: "Theme", logout: "Logout", search: "Search items...", scan: "Scan barcode...", category: "Category", grandTotal: "Grand Total", timestamp: "Added" },
+  fr: { welcome: "Bienvenue", add: "Ajouter", clear: "Effacer", export: "Exporter CSV", theme: "Thème", logout: "Déconnexion", search: "Rechercher...", scan: "Scanner le code-barres...", category: "Catégorie", grandTotal: "Total général", timestamp: "Ajouté" },
+  el: { welcome: "Καλώς ήρθες", add: "Προσθήκη", clear: "Καθαρισμός", export: "Εξαγωγή CSV", theme: "Θέμα", logout: "Αποσύνδεση", search: "Αναζήτηση προϊόντων...", scan: "Σάρωση barcode...", category: "Κατηγορία", grandTotal: "Συνολικό Ποσό", timestamp: "Προστέθηκε" }
+};
 
-  function register() {
-    const user = username.value.trim();
-    const pass = password.value.trim();
-    const conf = confirm.value.trim();
-    if (!user || !pass || !conf) return alert('Fill all fields');
-    if (pass !== conf) return alert('Passwords do not match');
-    if (users[user]) return alert('User already exists');
-    users[user] = { password: pass, items: [] };
-    localStorage.setItem('users', JSON.stringify(users));
-    alert('✅ Registered');
-  }
-
-  function login() {
-    const user = username.value.trim();
-    const pass = password.value.trim();
-    if (!users[user] || users[user].password !== pass) {
-      return alert('❌ Invalid credentials');
-    }
-    currentUser = user;
-    localStorage.setItem('session', user);
+window.onload = () => {
+  const session = localStorage.getItem('session');
+  if (session && users[session]) {
+    currentUser = session;
     showApp();
   }
-
-  function logout() {
-    localStorage.removeItem('session');
-    currentUser = null;
-    authSection.style.display = 'block';
-    appSection.style.display = 'none';
+  if (localStorage.getItem('theme') === 'dark') {
+    document.body.classList.add('dark-mode');
   }
+};
 
-  function showApp() {
-    authSection.style.display = 'none';
-    appSection.style.display = 'block';
-    userDisplay.textContent = currentUser;
-    renderItems();
-  }
-  function addItem() {
-    const name = itemName.value.trim();
-    const qty = parseInt(itemQty.value);
-    const price = parseFloat(itemPrice.value);
-    const cat = category.value;
-    if (!name || !qty || !price) return alert('Fill all fields');
-    users[currentUser].items.push({ name, qty, price, category: cat });
-    localStorage.setItem('users', JSON.stringify(users));
-    renderItems();
-    itemName.value = '';
-    itemQty.value = '';
-    itemPrice.value = '';
-  }
+function register() {
+  const user = username.value.trim();
+  const pass = password.value.trim();
+  const conf = confirm.value.trim();
+  if (!user || !pass || !conf) return alert('Fill all fields');
+  if (pass !== conf) return alert('Passwords do not match');
+  if (users[user]) return alert('User already exists');
+  users[user] = { password: pass, items: [] };
+  localStorage.setItem('users', JSON.stringify(users));
+  alert('✅ Registered');
+}
 
-  function clearItems() {
-    users[currentUser].items = [];
-    localStorage.setItem('users', JSON.stringify(users));
-    renderItems();
-  }
+function login() {
+  const user = username.value.trim();
+  const pass = password.value.trim();
+  if (!users[user] || users[user].password !== pass) return alert('❌ Invalid credentials');
+  currentUser = user;
+  localStorage.setItem('session', user);
+  showApp();
+}
 
-  function renderItems() {
-    itemsList.innerHTML = '';
-    const query = searchInput.value.toLowerCase();
-    users[currentUser].items
-      .filter(i => i.name.toLowerCase().includes(query))
-      .forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'item';
-        const total = item.qty * item.price;
-        div.textContent = `${item.name} (${item.qty}) - ${item.category} | $${total.toFixed(2)}`;
-        itemsList.appendChild(div);
-      });
-  }
+function logout() {
+  localStorage.removeItem('session');
+  currentUser = null;
+  authSection.style.display = 'block';
+  appSection.style.display = 'none';
+}
 
-  searchInput.oninput = renderItems;
+function showApp() {
+  authSection.style.display = 'none';
+  appSection.style.display = 'block';
+  userDisplay.textContent = currentUser;
+  setLanguage();
+  renderItems();
+}
 
-  function exportCSV() {
-    const rows = [['Name', 'Qty', 'Price', 'Category']];
-    users[currentUser].items.forEach(i => rows.push([i.name, i.qty, i.price, i.category]));
-    const csv = rows.map(r => r.join(',')).join('\\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `${currentUser}_warehouse.csv`;
-    link.click();
-  }
+function addItem() {
+  const name = itemName.value.trim();
+  const qty = parseInt(itemQty.value);
+  const price = parseFloat(itemPrice.value);
+  const cat = category.value;
+  const time = new Date().toLocaleString();
+  if (!name || !qty || !price) return alert('Fill all fields');
+  users[currentUser].items.push({ name, qty, price, category: cat, time });
+  localStorage.setItem('users', JSON.stringify(users));
+  renderItems();
+  itemName.value = '';
+  itemQty.value = '';
+  itemPrice.value = '';
+}
 
-  function toggleTheme() {
-    document.body.classList.toggle('dark-mode');
-    localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-  }
+function clearItems() {
+  users[currentUser].items = [];
+  localStorage.setItem('users', JSON.stringify(users));
+  renderItems();
+}
+
+function renderItems() {
+  itemsList.innerHTML = '';
+  const query = searchInput.value.toLowerCase();
+  const selectedCat = filterCategory.value;
+  const filtered = users[currentUser].items
+    .filter(i => i.name.toLowerCase().includes(query))
+    .filter(i => !selectedCat || i.category === selectedCat);
+
+  let grandTotal = 0;
+
+  filtered.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'item';
+    const total = item.qty * item.price;
+    grandTotal += total;
+    const barcode = generateBarcode(item.name);
+    div.innerHTML = `
+      <strong>${item.name}</strong> (${item.qty}) - ${item.category} | $${total.toFixed(2)}<br>
+      <img src="${barcode}" alt="Barcode" /><br>
+      <em>${translations[currentLang].timestamp}: ${item.time}</em>
+    `;
+    itemsList.appendChild(div);
+  });
+
+  const totalDiv = document.createElement('div');
+  totalDiv.innerHTML = `<strong>${translations[currentLang].grandTotal}: $${grandTotal.toFixed(2)}</strong>`;
+  itemsList.appendChild(totalDiv);
+}
+
+searchInput.oninput = renderItems;
+filterCategory.onchange = renderItems;
+
+function exportCSV() {
+  const rows = [['Name', 'Qty', 'Price', 'Category', 'Total']];
+  users[currentUser].items.forEach(i => {
+    const total = i.qty * i.price;
+    rows.push([i.name, i.qty, i.price, i.category, total.toFixed(2)]);
+  });
+  const csv = rows.map(r => r.join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `${currentUser}_warehouse.csv`;
+  link.click();
+}
+
+function generateBarcode(text) {
+  const canvas = document.createElement('canvas');
+  JsBarcode(canvas, text, { format: "CODE128", width: 2, height: 40 });
+  return canvas.toDataURL("image/png");
+}
+
+function scanBarcode() {
+  const code = scanInput.value.trim().toLowerCase();
+  const match = users[currentUser].items.find(i => i.name.toLowerCase() === code);
+  if (!match) return alert('❌ No item found');
+  alert(`✅ ${match.name} (${match.qty}) - ${match.category} | $${(match.qty * match.price).toFixed(2)}`);
+}
+
+function toggleTheme() {
+  document.body.classList.toggle('dark-mode');
+  localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+}
+
+function setLanguage() {
+  currentLang = languageSelect.value;
+  const t = translations[currentLang];
+  welcomeText.textContent = t.welcome;
+  document.querySelector('button[onclick="addItem()"]').textContent = t.add;
+  document.querySelector('button[onclick="clearItems()"]').textContent = t.clear;
+  document.querySelector('button[onclick="exportCSV()"]').textContent = t.export;
+  document.querySelector('button[onclick="toggleTheme()"]').textContent = t.theme;
+  document.querySelector('button[onclick="logout()"]').textContent = t.logout;
+  searchInput.placeholder = t.search;
+  scanInput.placeholder = t.scan;
+  renderItems();
+}
 </script>
 </body>
 </html>
-
