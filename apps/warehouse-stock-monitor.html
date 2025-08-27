@@ -220,6 +220,35 @@ function exportToExcel() {
 }
 
 
+
+    function exportToPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  let y = 10;
+  doc.setFontSize(12);
+  doc.text("Warehouse Stock Monitor", 10, y);
+  y += 10;
+
+  doc.text("Item\tSKU\tQty\tReorder\tStatus", 10, y);
+  y += 10;
+
+  document.querySelectorAll("#inventoryTable tbody tr").forEach(row => {
+    const item = row.cells[0].querySelector("input").value;
+    const sku = row.cells[1].querySelector("input").value;
+    const qty = row.cells[2].querySelector("input").value;
+    const reorder = row.cells[3].querySelector("input").value;
+    const status = row.cells[4].textContent;
+    doc.text(`${item}\t${sku}\t${qty}\t${reorder}\t${status}`, 10, y);
+    y += 10;
+  });
+
+  doc.save("warehouse_stock.pdf");
+}
+
+
+</script>
+
 <footer style="text-align: center; padding: 20px; font-size: 0.9rem; color: var(--text); background: var(--card); border-top: 1px solid #ccc;">
   &copy; Vasileios Nikitaras 2025. All rights reserved.
 </footer>
