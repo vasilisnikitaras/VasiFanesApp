@@ -3,12 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <title>Warehouse Stock Monitor</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- External libraries -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
   <style>
     :root {
       --bg: #f4f4f4;
@@ -21,9 +15,9 @@
       --card: #2c2c2c;
     }
     body {
+      font-family: Arial, sans-serif;
       background: var(--bg);
       color: var(--text);
-      font-family: Arial, sans-serif;
       padding: 20px;
       transition: all 0.3s ease;
     }
@@ -65,6 +59,7 @@
       border-radius: 4px;
       cursor: pointer;
     }
+    .toggle-btn { background: #007bff; color: white; }
     .export-btn { background: #28a745; color: white; }
     .add-btn { background: #17a2b8; color: white; }
     .search-box {
@@ -75,54 +70,52 @@
       padding: 6px;
       width: 200px;
     }
-    #loginPage {
+    #loginModal {
       display: none;
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: var(--card);
-      color: var(--text);
-      z-index: 9999;
-      text-align: center;
-      padding-top: 100px;
+      top: 20%;
+      left: 35%;
+      background: white;
+      padding: 20px;
+      border: 1px solid #ccc;
+      z-index: 1000;
     }
+    
+    
+    @media (max-width: 768px) {
+  body {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
 
-    /* Responsive styles for mobile */
-    @media screen and (max-width: 600px) {
-      .container {
-        padding: 10px;
-        max-width: 100%;
-      }
-      table, th, td {
-        font-size: 12px;
-        padding: 6px;
-      }
-      input[type="text"], input[type="number"] {
-        width: 100%;
-        box-sizing: border-box;
-      }
-      .btn {
-        display: block;
-        width: 100%;
-        margin: 8px 0;
-      }
-      .search-box input {
-        width: 100%;
-      }
-      #loginPage {
-        padding-top: 50px;
-      }
-    }
+  table {
+    width: 100%;
+    font-size: 0.85rem;
+  }
+
+  input, button {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+
+  footer {
+    padding: 15px;
+    font-size: 0.8rem;
+  }
+}
+
+    
+    
   </style>
 </head>
 <body>
   <div class="container">
+    <button class="btn toggle-btn" onclick="toggleTheme()">🌗 Toggle Theme</button>
     <button class="btn export-btn" onclick="exportTable()">📤 Export to Text</button>
     <button class="btn export-btn" onclick="exportToExcel()">📊 Export to Excel</button>
     <button class="btn export-btn" onclick="exportToPDF()">🧾 Export to PDF</button>
     <button class="btn add-btn" onclick="addRow()">➕ Add Item</button>
-    <button class="btn" onclick="showLoginPage()">🔐 Admin Login</button>
-    <button class="btn" onclick="toggleTheme()">🌓 Toggle Theme</button>
+    <button class="btn" onclick="document.getElementById('loginModal').style.display='block'">🔐 Admin Login</button>
 
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="Search Item or SKU" onkeyup="filterTable()" />
@@ -143,9 +136,9 @@
       <tbody>
         <tr>
           <td><input type="text" value="Box A" /></td>
-          <td><input type="text" value="SH40001" /></td>
+          <td><input type="text" value="SKU001" /></td>
           <td><input type="number" value="12" onchange="checkStock(this)" /></td>
-          <td><input type="number" value="25" /></td>
+          <td><input type="number" value="10" /></td>
           <td class="status"></td>
           <td><button onclick="deleteRow(this)">🗑️</button></td>
         </tr>
@@ -153,151 +146,161 @@
     </table>
   </div>
 
-  <div id="loginPage">
-    <h2>Admin Login</h2>
-    <input type="text" id="loginUser" placeholder="Username" /><br/><br/>
-    <input type="password" id="loginPass" placeholder="Password" /><br/><br/>
-    <button onclick="submitLogin()">Login</button>
-  </div>
+  <div id="loginModal">
+    <h3>Admin Login</h3>
+    <input type="text" id="adminUser" placeholder="Username" /><br/><br/>
+    <input type="password" id="adminPass" placeholder="Password" /><br/><br/>
+    <button onclick="validateLogin()">Login</button>
+</div>
+  
+  
+  
+  
+<script>
+  // 🌗 Toggle between light and dark theme
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute("data-theme");
+    const next = current === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+  }
 
-  <script>
-    function checkStock(input) {
-      const row = input.closest("tr");
-      const quantity = parseInt(row.cells[2].querySelector("input").value);
-      const reorder = parseInt(row.cells[3].querySelector("input").value);
-      const statusCell = row.querySelector(".status");
-      if (quantity < reorder) {
-        statusCell.textContent = "Restock";
-        statusCell.className = "status low";
-      } else {
-        statusCell.textContent = "OK";
-        statusCell.className = "status ok";
-      }
+  // ✅ Check stock status based on quantity and reorder level
+  function checkStock(input) {
+    const row = input.closest("tr");
+    const quantity = parseInt(row.cells[2].querySelector("input").value);
+    const reorder = parseInt(row.cells[3].querySelector("input").value);
+    const statusCell = row.querySelector(".status");
+
+    if (quantity < reorder) {
+      statusCell.textContent = "Restock";
+      statusCell.className = "status low";
+    } else {
+      statusCell.textContent = "OK";
+      statusCell.className = "status ok";
     }
+  }
 
-    function addRow() {
-      const table = document.querySelector("#inventoryTable tbody");
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td><input type="text" value="" /></td>
-        <td><input type="text" value="" /></td>
-        <td><input type="number" value="0" onchange="checkStock(this)" /></td>
-        <td><input type="number" value="0" /></td>
-        <td class="status"></td>
-        <td><button onclick="deleteRow(this)">🗑️</button></td>
-      `;
-      table.appendChild(row);
-      checkStock(row.querySelector('input[type="number"]'));
+  // ➕ Add a new row to the inventory table
+  function addRow() {
+    const table = document.querySelector("#inventoryTable tbody");
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td><input type="text" value="" /></td>
+      <td><input type="text" value="" /></td>
+      <td><input type="number" value="0" onchange="checkStock(this)" /></td>
+      <td><input type="number" value="0" /></td>
+      <td class="status"></td>
+      <td><button onclick="deleteRow(this)">🗑️</button></td>
+    `;
+    table.appendChild(row);
+    checkStock(row.querySelector('input[type="number"]'));
+  }
+
+  // 🗑️ Delete a row from the table
+  function deleteRow(btn) {
+    const row = btn.closest("tr");
+    row.remove();
+  }
+
+  // 🔍 Filter table by item name or SKU
+  function filterTable() {
+    const query = document.getElementById("searchInput").value.toLowerCase();
+    document.querySelectorAll("#inventoryTable tbody tr").forEach(row => {
+      const item = row.cells[0].querySelector("input").value.toLowerCase();
+      const sku = row.cells[1].querySelector("input").value.toLowerCase();
+      row.style.display = item.includes(query) || sku.includes(query) ? "" : "none";
+    });
+  }
+
+  // 🔐 Validate admin login
+  function validateLogin() {
+    const user = document.getElementById("adminUser").value;
+    const pass = document.getElementById("adminPass").value;
+    if (user === "admin" && pass === "1234") {
+      alert("Access granted");
+      document.getElementById("loginModal").style.display = "none";
+      // You can show admin-only features here
+    } else {
+      alert("Invalid credentials");
     }
+  }
 
-    function deleteRow(btn) {
-      btn.closest("tr").remove();
-    }
+  // 🟢 Run initial stock check on page load
+  window.onload = () => {
+    document.querySelectorAll("#inventoryTable tbody tr").forEach(row => {
+      const qtyInput = row.cells[2].querySelector("input");
+      checkStock(qtyInput);
+    });
+  };
+</script>
+<!-- External libraries for Excel and PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-    function filterTable() {
-      const query = document.getElementById("searchInput").value.toLowerCase();
-      document.querySelectorAll("#inventoryTable tbody tr").forEach(row => {
-        const item = row.cells[0].querySelector("input").value.toLowerCase();
-        const sku = row.cells[1].querySelector("input").value.toLowerCase();
-        row.style.display = item.includes(query) || sku.includes(query) ? "" : "none";
-      });
-    }
+<script>
+  // 📤 Export table to plain text (.txt)
+  function exportTable() {
+    let text = "Item\tSKU\tQuantity\tReorder Level\tStatus\n";
+    document.querySelectorAll("#inventoryTable tbody tr").forEach(row => {
+      const item = row.cells[0].querySelector("input").value;
+      const sku = row.cells[1].querySelector("input").value;
+      const qty = row.cells[2].querySelector("input").value;
+      const reorder = row.cells[3].querySelector("input").value;
+      const status = row.cells[4].textContent;
+      text += `${item}\t${sku}\t${qty}\t${reorder}\t${status}\n`;
+    });
 
-    function exportTable() {
-      let text = "Item\tSKU\tQuantity\tReorder Level\tStatus\n";
-      document.querySelectorAll("#inventoryTable tbody tr").forEach(row => {
-        const item = row.cells[0].querySelector("input").value;
-        const sku = row.cells[1].querySelector("input").value;
-        const qty = row.cells[2].querySelector("input").value;
-        const reorder = row.cells[3].querySelector("input").value;
-        const status = row.cells[4].textContent;
-        text += `${item}\t${sku}\t${qty}\t${reorder}\t${status}\n`;
-      });
-      const blob = new Blob([text], { type: "text/plain" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = "warehouse_stock.txt";
-      link.click();
-    }
+    const blob = new Blob([text], { type: "text/plain" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "warehouse_stock.txt";
+    link.click();
+  }
 
-    function exportToExcel() {
-      const wb = XLSX.utils.book_new();
-      const rows = [["Item", "SKU", "Quantity", "Reorder Level", "Status"]];
-      document.querySelectorAll("#inventoryTable tbody tr").forEach(row => {
-        const item = row.cells[0].querySelector("input").value;
-        const sku = row.cells[1].querySelector("input").
-                  const sku = row.cells[1].querySelector("input").value;
-        const qty = row.cells[2].querySelector("input").value;
-        const reorder = row.cells[3].querySelector("input").value;
-        const status = row.cells[4].textContent;
-        rows.push([item, sku, qty, reorder, status]);
-      });
-      const ws = XLSX.utils.aoa_to_sheet(rows);
-      XLSX.utils.book_append_sheet(wb, ws, "Stock");
-      XLSX.writeFile(wb, "warehouse_stock.xlsx");
-    }
+  // 📊 Export table to Excel (.xlsx)
+  function exportToExcel() {
+    const wb = XLSX.utils.book_new();
+    const rows = [["Item", "SKU", "Quantity", "Reorder Level", "Status"]];
+    document.querySelectorAll("#inventoryTable tbody tr").forEach(row => {
+      const item = row.cells[0].querySelector("input").value;
+      const sku = row.cells[1].querySelector("input").value;
+      const qty = row.cells[2].querySelector("input").value;
+      const reorder = row.cells[3].querySelector("input").value;
+      const status = row.cells[4].textContent;
+      rows.push([item, sku, qty, reorder, status]);
+    });
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    XLSX.utils.book_append_sheet(wb, ws, "Stock");
+    XLSX.writeFile(wb, "warehouse_stock.xlsx");
+  }
 
-    function exportToPDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      let y = 10;
-      doc.setFontSize(12);
-      doc.text("Warehouse Stock Monitor", 10, y);
+  // 🧾 Export table to PDF (.pdf)
+  function exportToPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.setFontSize(12);
+    doc.text("Warehouse Stock Report", 20, 20);
+    let y = 30;
+
+    document.querySelectorAll("#inventoryTable tbody tr").forEach(row => {
+      const item = row.cells[0].querySelector("input").value;
+      const sku = row.cells[1].querySelector("input").value;
+      const qty = row.cells[2].querySelector("input").value;
+      const reorder = row.cells[3].querySelector("input").value;
+      const status = row.cells[4].textContent;
+      doc.text(`${item} | ${sku} | Qty: ${qty} | Reorder: ${reorder} | Status: ${status}`, 20, y);
       y += 10;
-      doc.text("Item\tSKU\tQty\tReorder\tStatus", 10, y);
-      y += 10;
-      document.querySelectorAll("#inventoryTable tbody tr").forEach(row => {
-        const item = row.cells[0].querySelector("input").value;
-        const sku = row.cells[1].querySelector("input").value;
-        const qty = row.cells[2].querySelector("input").value;
-        const reorder = row.cells[3].querySelector("input").value;
-        const status = row.cells[4].textContent;
-        doc.text(`${item}\t${sku}\t${qty}\t${reorder}\t${status}`, 10, y);
-        y += 10;
-      });
-      doc.save("warehouse_stock.pdf");
-    }
+    });
 
-    function showLoginPage() {
-      document.getElementById("loginPage").style.display = "block";
-    }
+    doc.save("warehouse_stock.pdf");
+  }
+</script>
+  
+<footer style="text-align: center; padding: 20px; font-size: 0.9rem; color: var(--text); background: var(--card); border-top: 1px solid #ccc;">
+  &copy; Vasileios Nikitaras 2025. All rights reserved.
+</footer>
 
-    function submitLogin() {
-      const user = document.getElementById("loginUser").value;
-      const pass = document.getElementById("loginPass").value;
-      if (user === "admin" && pass === "1234") {
-        alert("Welcome, Admin!");
-        document.getElementById("loginPage").style.display = "none";
-      } else {
-        alert("Invalid login");
-      }
-    }
-
-    function toggleTheme() {
-      const html = document.documentElement;
-      const current = html.getAttribute("data-theme");
-      html.setAttribute("data-theme", current === "light" ? "dark" : "light");
-    }
-
-    window.onload = () => {
-      const userLang = navigator.language || navigator.userLanguage;
-      if (userLang.startsWith("fr")) {
-        alert("Langue détectée : Français");
-      } else if (userLang.startsWith("el")) {
-        alert("Εντοπίστηκε γλώσσα: Ελληνικά");
-      } else {
-        alert("Detected language: English");
-      }
-
-      document.querySelectorAll("#inventoryTable tbody tr").forEach(row => {
-        const qtyInput = row.cells[2].querySelector("input");
-        checkStock(qtyInput);
-      });
-    };
-  </script>
-
-  <footer style="text-align: center; padding: 20px; font-size: 0.9rem; color: var(--text); background: var(--card); border-top: 1px solid #ccc;">
-    &copy; Vasileios Nikitaras 2025. All rights reserved.
-  </footer>
+  
+  
 </body>
 </html>
