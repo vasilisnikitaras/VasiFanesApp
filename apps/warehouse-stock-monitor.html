@@ -3,9 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Warehouse Stock Monitor</title>
-  
-<!--  <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- External libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -89,42 +87,35 @@
       padding-top: 100px;
     }
 
-@media screen and (max-width: 600px) {
-  .container {
-    padding: 10px;
-    max-width: 100%;
-  }
-
-  table, th, td {
-    font-size: 12px;
-    padding: 6px;
-  }
-
-  input[type="text"], input[type="number"] {
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .btn {
-    display: block;
-    width: 100%;
-    margin: 8px 0;
-  }
-
-  .search-box input {
-    width: 100%;
-  }
-
-  #loginPage {
-    padding-top: 50px;
-  }
-}
-    
+    /* Responsive styles for mobile */
+    @media screen and (max-width: 600px) {
+      .container {
+        padding: 10px;
+        max-width: 100%;
+      }
+      table, th, td {
+        font-size: 12px;
+        padding: 6px;
+      }
+      input[type="text"], input[type="number"] {
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .btn {
+        display: block;
+        width: 100%;
+        margin: 8px 0;
+      }
+      .search-box input {
+        width: 100%;
+      }
+      #loginPage {
+        padding-top: 50px;
+      }
+    }
   </style>
 </head>
 <body>
-
-  
   <div class="container">
     <button class="btn export-btn" onclick="exportTable()">📤 Export to Text</button>
     <button class="btn export-btn" onclick="exportToExcel()">📊 Export to Excel</button>
@@ -152,9 +143,9 @@
       <tbody>
         <tr>
           <td><input type="text" value="Box A" /></td>
-          <td><input type="text" value="SKU001" /></td>
+          <td><input type="text" value="SH40001" /></td>
           <td><input type="number" value="12" onchange="checkStock(this)" /></td>
-          <td><input type="number" value="10" /></td>
+          <td><input type="number" value="25" /></td>
           <td class="status"></td>
           <td><button onclick="deleteRow(this)">🗑️</button></td>
         </tr>
@@ -234,7 +225,8 @@
       const rows = [["Item", "SKU", "Quantity", "Reorder Level", "Status"]];
       document.querySelectorAll("#inventoryTable tbody tr").forEach(row => {
         const item = row.cells[0].querySelector("input").value;
-        const sku = row.cells[1].querySelector("input").value;
+        const sku = row.cells[1].querySelector("input").
+                  const sku = row.cells[1].querySelector("input").value;
         const qty = row.cells[2].querySelector("input").value;
         const reorder = row.cells[3].querySelector("input").value;
         const status = row.cells[4].textContent;
@@ -253,17 +245,7 @@
       doc.text("Warehouse Stock Monitor", 10, y);
       y += 10;
       doc.text("Item\tSKU\tQty\tReorder\tStatus", 10, y);
-      y += 
-            function exportToPDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      let y = 10;
-      doc.setFontSize(12);
-      doc.text("Warehouse Stock Monitor", 10, y);
       y += 10;
-      doc.text("Item\tSKU\tQty\tReorder\tStatus", 10, y);
-      y += 10;
-
       document.querySelectorAll("#inventoryTable tbody tr").forEach(row => {
         const item = row.cells[0].querySelector("input").value;
         const sku = row.cells[1].querySelector("input").value;
@@ -273,7 +255,6 @@
         doc.text(`${item}\t${sku}\t${qty}\t${reorder}\t${status}`, 10, y);
         y += 10;
       });
-
       doc.save("warehouse_stock.pdf");
     }
 
