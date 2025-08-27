@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <title>Warehouse Stock Monitor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 
   <!-- External libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -85,9 +87,43 @@
       text-align: center;
       padding-top: 100px;
     }
+
+@media screen and (max-width: 600px) {
+  .container {
+    padding: 10px;
+    max-width: 100%;
+  }
+
+  table, th, td {
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  input[type="text"], input[type="number"] {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .btn {
+    display: block;
+    width: 100%;
+    margin: 8px 0;
+  }
+
+  .search-box input {
+    width: 100%;
+  }
+
+  #loginPage {
+    padding-top: 50px;
+  }
+}
+    
   </style>
 </head>
 <body>
+
+  
   <div class="container">
     <button class="btn export-btn" onclick="exportTable()">📤 Export to Text</button>
     <button class="btn export-btn" onclick="exportToExcel()">📊 Export to Excel</button>
