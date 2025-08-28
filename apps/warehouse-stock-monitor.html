@@ -104,6 +104,69 @@
   }
 }
 
+
+    @media screen and (max-width: 600px) {
+  body {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+
+  .container {
+    padding: 12px;
+    max-width: 100%;
+    box-sizing: border-box;
+    animation: slideUp 0.4s ease-in-out;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+  }
+
+  table, th, td {
+    font-size: 0.85rem;
+    padding: 6px;
+  }
+
+  input[type="text"],
+  input[type="number"] {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 0.9rem;
+    padding: 6px;
+  }
+
+  .btn {
+    display: block;
+    width: 100%;
+    margin: 8px 0;
+    min-height: 44px;
+    font-size: 0.95rem;
+  }
+
+  .search-box input {
+    width: 100%;
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+
+  #loginPage {
+    padding-top: 50px;
+    width: 90%;
+    left: 5%;
+  }
+
+  footer {
+    padding: 15px;
+    font-size: 0.8rem;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+}
+
     
     
   </style>
