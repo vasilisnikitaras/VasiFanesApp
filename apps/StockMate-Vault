@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StockMate Vault</title>
+  <style>
+    :root {
+      --bg: #fff;
+      --text: #000;
+    }
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .dark {
+      --bg: #121212;
+      --text: #f0f0f0;
+    }
+    header, footer {
+      padding: 1em;
+      background: #444;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    main {
+      padding: 1em;
+    }
+    input, button, select {
+      margin: 0.5em;
+      padding: 0.5em;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      margin: 0.5em 0;
+      background: #eee;
+      padding: 0.5em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .actions button {
+      margin-left: 0.5em;
+    }
+    #scanner-container {
+      width: 100%;
+      max-width: 400px;
+      height: 200px;
+      margin-top: 1em;
+    }
+    
+.dark li {
+  background: #333;
+  color: #f0f0f0;
+}
+
+    
+    .dark li {
+  background: #2a2a2a;
+  color: #f0f0f0;
+  border: 1px solid #444;
+}
+
+    .dark {
+  --bg: #121212;
+  --text: #f0f0f0;
+}
+
+.dark li {
+  background: #2a2a2a;
+  color: #f0f0f0;
+  border: 1px solid #444;
+}
+    @media (max-width: 600px) {
+  .stock-list {
+    flex-direction: column;
+  }
+
+  .input-group {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .smart-filters {
+    display: block;
+    width: 100%;
+  }
+
+  .search-bar input {
+    width: 100%;
+    font-size: 16px;
+  }
+}
+  .top-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 1000;
+  width: auto;
+  height: auto;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.top-button.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.top-button:hover {
+  background: #0056b3;
+}
+
+.add-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #28a745;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 999;
+}
+.add-button:hover {
+  background: #218838;
+}
+.dark .top-button {
+  background-color: #444;
+  color: #f0f0f0;
+}
+.dark .top-button:hover {
+  background-color: #666;
+}
+@media (max-width: 600px) {
+  .top-button {
+    bottom: 10px;
+    right: 10px;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}
+
+  </style>
+</head>
+<body>
+
+<button id="scrollTopBtn" class="top-button">Top</button>
+
+  
+  <header>
+    <h1>StockMate Vault</h1>
+    <select id="language">
+      <option value="en">English</option>
+      <option value="el">Ελληνικά</option>
+      <option value="fr">Français</option>
+    </select>
+    <button id="toggle-theme">🌙</button>
+  </header>
+
+  <main>
+    <section>
+      <h2 data-i18n="add">Add Stock</h2>
+      <input type="text" id="item-name" placeholder="Item Name" />
+      <input type="number" id="item-qty" placeholder="Quantity" />
+      <input type="text" id="item-barcode" placeholder="Barcode (optional)" />
+      <button onclick="addItem()">➕</button>
+    </section>
+
+    <section>
+      <h2 data-i18n="search">Search</h2>
+      <input type="text" id="search" placeholder="Search..." oninput="renderItems()" />
+    </section>
+
+    <section>
+      <h2 data-i18n="list">Stock List</h2>
+      <ul id="items"></ul>
+    </section>
+
+    
+    <section>
+  <h2>Smart Filters</h2>
+  <select id="qty-filter">
+    <option value="all">All Quantities</option>
+    <option value="low">Low Stock (≤2)</option>
+    <option value="out">Out of Stock (0)</option>
+    <option value="high">High Stock (>10)</option>
+  </select>
+
+  <input type="text" id="barcode-filter" placeholder="Barcode starts with..." />
+</section>
+
+    
+    <section>
+      <h2 data-i18n="scan">Scan Item</h2>
+      <button onclick="startScanner()">📷 Start Scanner</button>
+      <button id="stop-scanner">Stop Scanner</button>
+
+      <div id="scanner-container"></div>
+    </section>
+    
+    <section>
+  <h2 data-i18n="export">Export Data</h2>
+  <select id="export-format">
+    <option value="json">JSON</option>
+    <option value="txt">TXT</option>
+    <option value="csv">CSV</option>
+  </select>
+  <button onclick="exportData()">📤 Export</button>
+</section>
+    
+    <section>
+  <h2>Action History</h2>
+  <select id="history-filter">
+    <option value="all">All</option>
+    <option value="add">Add</option>
+    <option value="receive">Receive</option>
+    <option value="sale">Sale</option>
+    <option value="delete">Delete</option>
+  </select>
+  <ul id="history-log"></ul>
+</section>
+
+
+  </main>
+
+   <footer>
+    <p>© Vasileios Nikitaras</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+  <script>
+    let stock = JSON.parse(localStorage.getItem("stock")) || [];
+    let history = JSON.parse(localStorage.getItem("history")) || [];
+
+    const theme = localStorage.getItem("theme");
+    if (theme === "dark") document.body.classList.add("dark");
+
+    function addItem() {
+      const name = document.getElementById("item-name").value.trim();
+      const qty = parseInt(document.getElementById("item-qty").value);
+      const barcode = document.getElementById("item-barcode").value.trim();
+      if (!name || qty <= 0) return;
+
+      if (stock.some(s => s.barcode === barcode && barcode)) {
+        alert("Barcode already exists!");
+        return;
+      }
+
+      const newItem = { name, qty, barcode };
+      stock.push(newItem);
+      logAction("receive", newItem);
+      localStorage.setItem("stock", JSON.stringify(stock));
+      clearInputs();
+      renderItems();
+      calculateTotalStock();
+    }
+
+    function clearInputs() {
+      document.getElementById("item-name").value = "";
+      document.getElementById("item-qty").value = "";
+      document.getElementById("item-barcode").value = "";
+    }
+
+    function renderItems() {
+      const listElement = document.getElementById("items");
+      const searchTerm = document.getElementById("search").value.toLowerCase();
+      const qtyOption = document.getElementById("qty-filter")?.value || "all";
+      const barcodeStart = document.getElementById("barcode-filter")?.value.trim() || "";
+
+      listElement.innerHTML = "";
+
+      const filteredItems = stock.filter(item => {
+        const nameMatch = item.name.toLowerCase().includes(searchTerm);
+        const barcodeMatch = item.barcode?.toLowerCase().includes(searchTerm);
+        const searchMatch = nameMatch || barcodeMatch;
+
+        const qtyMatch =
+          qtyOption === "all" ||
+          (qtyOption === "low" && item.qty <= 2) ||
+          (qtyOption === "out" && item.qty === 0) ||
+          (qtyOption === "high" && item.qty > 10);
+
+        const barcodePrefixMatch = barcodeStart === "" || item.barcode?.startsWith(barcodeStart);
+
+        return searchMatch && qtyMatch && barcodePrefixMatch;
+      });
+
+      for (let i = 0; i < filteredItems.length; i++) {
+        const item = filteredItems[i];
+        const li = document.createElement("li");
+
+        if (item.qty <= 2) {
+          li.style.border = "2px solid red";
+        }
+
+        const barcodeDisplay = item.barcode ? `📦 ${item.barcode}` : "";
+        li.innerHTML = `
+          <strong>${item.name}</strong> — Qty: ${item.qty} ${barcodeDisplay}
+          <span class="actions">
+            <button onclick="editItem(${i})">✏️</button>
+            <button onclick="deleteItem(${i})">🗑️</button>
+            <button onclick="sellItem(${i})">💸</button>
+            <button onclick="receiveItem(${i})">📥</button>
+          </span>
+        `;
+
+        listElement.appendChild(li);
+      }
+    }
+
+    function editItem(index) {
+      const item = stock[index];
+      document.getElementById("item-name").value = item.name;
+      document.getElementById("item-qty").value = item.qty;
+      document.getElementById("item-barcode").value = item.barcode || "";
+      deleteItem(index);
+    }
+
+    function deleteItem(index) {
+      stock.splice(index, 1);
+      localStorage.setItem("stock", JSON.stringify(stock));
+      renderItems();
+      calculateTotalStock();
+    }
+
+    function sellItem(index) {
+      if (stock[index].qty > 0) {
+        stock[index].qty -= 1;
+        logAction("sale", stock[index]);
+        localStorage.setItem("stock", JSON.stringify(stock));
+        renderItems();
+        calculateTotalStock();
+      } else {
+        alert("Out of stock!");
+      }
+    }
+
+    function receiveItem(index) {
+      stock[index].qty += 1;
+      logAction("receive", stock[index]);
+      localStorage.setItem("stock", JSON.stringify(stock));
+      renderItems();
+      calculateTotalStock();
+    }
+
+    function logAction(type, item) {
+      history.push({ type, item, date: new Date().toISOString() });
+      localStorage.setItem("history", JSON.stringify(history));
+    }
+
+    function calculateTotalStock() {
+      const total = stock.reduce((sum, item) => sum + item.qty, 0);
+      let display = document.getElementById("total-stock-value");
+      if (!display) {
+        display = document.createElement("p");
+        display.id = "total-stock-value";
+        document.querySelector("main").insertAdjacentHTML("afterbegin", `<section><h2>Total Stock</h2></section>`);
+        document.querySelector("main section:first-child").appendChild(display);
+      }
+      display.textContent = `Total Items: ${total}`;
+    }
+
+// Show "Top" button only when user scrolls near bottom
+document.addEventListener('DOMContentLoaded', () => {
+  const scrollTopBtn = document.getElementById('scrollTopBtn');
+  scrollTopBtn.style.display = 'none';
+
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    const viewportHeight = window.innerHeight;
+    const fullHeight = document.body.scrollHeight;
+
+    if (scrollY + viewportHeight >= fullHeight - 100) {
+      scrollTopBtn.style.display = 'block';
+    } else {
+      scrollTopBtn.style.display = 'none';
+    }
+  });
+
+  scrollTopBtn.onclick = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+});
+
+
+    
+
+    function renderHistory() {
+      const filter = document.getElementById("history-filter").value;
+      const log = document.getElementById("history-log");
+      log.innerHTML = "";
+
+      const filtered = history.filter(entry => filter === "all" || entry.type === filter);
+      filtered.reverse().forEach(entry => {
+        const li = document.createElement("li");
+        li.textContent = `${entry.type.toUpperCase()} — ${entry.item.name} (${entry.item.qty}) ${entry.item.barcode || ""}`;
+        log.appendChild(li);
+      });
+    }
+
+    function startScanner() {
+      Quagga.init({
+        inputStream: {
+          name: "Live",
+          type: "LiveStream",
+          target: document.querySelector("#scanner-container"),
+        },
+        decoder: {
+          readers: ["code_128_reader", "ean_reader", "ean_8_reader"]
+        }
+      }, function(err) {
+        if (err) return console.error(err);
+        Quagga.start();
+      });
+
+      Quagga.onDetected(data => {
+        const code = data.codeResult.code;
+        document.getElementById("item-barcode").value = code;
+        Quagga.stop();
+      });
+    }
+
+    document.getElementById("stop-scanner").addEventListener("click", function () {
+      Quagga.stop();
+      const scannerContainer = document.getElementById("scanner-container");
+      if (scannerContainer) {
+        scannerContainer.innerHTML = "";
+      }
+    });
+
+    function exportData() {
+      const format = document.getElementById("export-format").value;
+      let content = "";
+      if (format === "json") {
+        content = JSON.stringify(stock, null, 2);
+      } else if (format === "txt") {
+        content = stock.map(item => `${item.name} - ${item.qty} ${item.barcode || ""}`).join("\n");
+      } else if (format === "csv") {
+        content = "Name,Quantity,Barcode\n" + stock.map(item => `${item.name},${item.qty},${item.barcode || ""}`).join("\n");
+      }
+
+      const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `stockmate_export.${format}`;
+      link.click();
+    }
+
+    function translateUI(lang) {
+      const translations = {
+        en: { add: "Add Stock", list: "Stock List", scan: "Scan Item", delete: "Delete", edit: "Edit", search: "Search", export: "Export Data" },
+        el: { add: "Προσθήκη Αποθέματος", list: "Λίστα Αποθέματος", scan: "Σάρωση Είδους", delete: "Διαγραφή", edit: "Επεξεργασία", search: "Αναζήτηση", export: "Εξαγωγή Δεδομένων" },
+        fr: { add: "Ajouter Stock", list: "Liste de Stock", scan: "Scanner l'article", delete: "Supprimer", edit: "Modifier", search: "Rechercher", export: "Exporter les données" }
+      };
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        el.textContent = translations[lang][key];
+      });
+    }
+
+    // Event listeners
+    document.getElementById("toggle-theme").onclick = () => {
+      document.body.classList.toggle("dark");
+      localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
+    };
+
+    document.getElementById("language").onchange = (e) => {
+      const lang = e.target.value;
+      translateUI(lang);
+    };
+    
+    document.getElementById("qty-filter").onchange = renderItems;
+    document.getElementById("barcode-filter").oninput = renderItems;
+    document.getElementById("history-filter").onchange = renderHistory;
+
+    // Initial render
+    renderItems();
+    renderHistory();
+    calculateTotalStock();
+
+document.addEventListener('DOMContentLoaded', () => {
+  const scrollTopBtn = document.getElementById('scrollTopBtn');
+
+  // Only activate scroll listener if page is scrollable
+  if (document.body.scrollHeight > window.innerHeight) {
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      const viewportHeight = window.innerHeight;
+      const fullHeight = document.body.scrollHeight;
+
+      if (scrollY + viewportHeight >= fullHeight - 100) {
+        scrollTopBtn.classList.add('show');
+      } else {
+        scrollTopBtn.classList.remove('show');
+      }
+    });
+  }
+
+  scrollTopBtn.onclick = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+});
+
+
+  </script>
+</body>
+</html>
