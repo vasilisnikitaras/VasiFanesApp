@@ -164,7 +164,7 @@
 <body>
 
 <button id="scrollTopBtn" class="top-button">Top</button>
-<button onclick="openModal('./apps/stockmate-vault.html')">Launch</button>
+<button onclick="openModal('./apps/StockMate-Vault-Module.html')">Launch</button>
 
   
   <header>
@@ -178,6 +178,7 @@
   </header>
 
   <main>
+    <!--
     <section>
       <h2 data-i18n="add">Add Stock</h2>
       <input type="text" id="item-name" placeholder="Item Name" />
@@ -185,7 +186,22 @@
       <input type="text" id="item-barcode" placeholder="Barcode (optional)" />
       <button onclick="addItem()">➕</button>
     </section>
+ -->
 
+<!-- StockMate-Vault-Module.html -->
+<section>
+  <h2>Add Stock</h2>
+  <input type="text" id="item-name" placeholder="Item Name" />
+  <input type="number" id="item-qty" placeholder="Quantity" />
+  <input type="text" id="item-barcode" placeholder="Barcode (optional)" />
+  <button onclick="addItem()">➕</button>
+</section>
+
+
+
+
+
+    
     <section>
       <h2 data-i18n="search">Search</h2>
       <input type="text" id="search" placeholder="Search..." oninput="renderItems()" />
@@ -559,6 +575,10 @@ function closeModal() {
 }
 
 
-  </script>
+  </script
+
+    <!-- Repeat for other sections like Search, List, Export, etc. -->
+<script src="stockmate-vault.js"></script>
+    
 </body>
 </html>
