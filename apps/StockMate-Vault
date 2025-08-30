@@ -164,6 +164,7 @@
 <body>
 
 <button id="scrollTopBtn" class="top-button">Top</button>
+<button onclick="openModal('./apps/stockmate-vault.html')">Launch</button>
 
   
   <header>
