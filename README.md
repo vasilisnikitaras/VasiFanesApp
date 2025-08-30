@@ -20,6 +20,8 @@ Welcome to **VasiFanes.app** — a sleek, minimalist web lab built by [Vasilis N
 | Tiny Timer             | 🔜 Coming   | Countdown & Pomodoro features    |
 | CSV to JSON Exporter   | 🔜 Coming   | Lightweight data formatter       |
 | Password Strength Test | 🔜 Coming   | Real-time password checker       |
+| StockMate Vault ✅ Ready  
+| Inventory tracker with smart filters, export tools, and scroll-to-top UX
 
 ---
 
