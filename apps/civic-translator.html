@@ -12,7 +12,12 @@
     <p>Translate civic, professional information into your own language.</p>
 
     <label for="civic-log" style="display:block; margin-top:1rem;">Enter civic log:</label>
-    <input type="text" id="civic-log" placeholder="e.g. Public notice, local issue..." style="width:100%; padding:0.5rem; margin-top:0.5rem; border-radius:6px; border:1px solid #ccc;" />
+    <input
+      type="text"
+      id="civic-log"
+      placeholder="e.g. Public notice, local issue..."
+      style="width:100%; padding:0.5rem; margin-top:0.5rem; border-radius:6px; border:1px solid #ccc;"
+    />
 
     <button style="margin-top:1rem;" onclick="translateCivic()">Translate</button>
 
@@ -27,8 +32,17 @@
         output.textContent = "Please enter a civic log to translate.";
         return;
       }
+
       // Poetic placeholder translation logic
-      output.textContent = `"${input}" translated into poetic civic clarity. 🌱`;
+      const poeticMap = {
+        "public notice": "🌿 A whisper from the city to its people.",
+        "local issue": "🌀 A ripple in the civic pond.",
+        "meeting": "🏛️ A gathering of minds beneath shared purpose.",
+        "announcement": "📣 A call echoing through communal corridors."
+      };
+
+      let translated = poeticMap[input.toLowerCase()] || `"${input}" translated into poetic civic clarity. 🌱`;
+      output.textContent = translated;
     }
   </script>
 </body>
