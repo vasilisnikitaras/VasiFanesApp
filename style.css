@@ -6,16 +6,19 @@ body {
   color: var(--text);
   transition: background-color 0.3s, color 0.3s;
 }
+
 header, footer {
   text-align: center;
   padding: 2rem;
   background-color: var(--header-bg);
   color: var(--header-text);
 }
+
 nav {
   text-align: center;
   margin: 1rem 0;
 }
+
 a {
   text-decoration: none;
   color: var(--link);
@@ -30,6 +33,7 @@ button {
   border-radius: 6px;
   cursor: pointer;
 }
+
 button:hover {
   background-color: var(--button-hover);
 }
@@ -42,9 +46,10 @@ button:hover {
 /* Grid Layout */
 .app-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1.5rem;
   padding: 2rem;
+  justify-items: center;
 }
 
 /* Tool Cards */
@@ -55,7 +60,14 @@ button:hover {
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   text-align: center;
+  transition: transform 0.3s ease;
+  min-height: 200px;
 }
+
+.card:hover {
+  transform: scale(1.05);
+}
+
 .card h2 {
   margin-bottom: 0.8rem;
 }
@@ -70,12 +82,15 @@ button:hover {
   justify-content: center;
   align-items: center;
 }
+
 #modal-overlay.modal-hidden {
   display: none;
 }
+
 #modal-overlay.modal-visible {
   display: flex;
 }
+
 #modal-content {
   background-color: var(--modal-bg);
   padding: 1rem;
@@ -85,6 +100,7 @@ button:hover {
   box-shadow: 0 0 20px rgba(0,0,0,0.5);
   position: relative;
 }
+
 .modal-close {
   position: absolute;
   top: 0.5rem;
@@ -95,9 +111,10 @@ button:hover {
   border: none;
   cursor: pointer;
 }
+
 iframe {
   width: 100%;
-  height: 600px;
+  height: 70vh;
   border: none;
 }
 
@@ -129,33 +146,8 @@ iframe {
   --card-text: #eee;
   --modal-bg: #2c2c2c;
 }
-.app-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-  padding: 2rem;
-  justify-items: center;
-}
-.card {
-  transition: transform 0.2s ease;
-}
-.card:hover {
-  transform: scale(1.05);
-}
-.card {
-  transition: transform 0.3s ease;
-}
 
-.card:hover {
-  transform: scale(1.05);
-}
-.app-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.5rem;
-  padding: 2rem;
-  justify-items: center;
-}
+/* Responsive Planting */
 @media screen and (max-width: 600px) {
   .card {
     padding: 1rem;
@@ -175,9 +167,3 @@ iframe {
     font-size: 1rem;
   }
 }
-
-iframe {
-  width: 100%;
-  height: 70vh;
-}
-
