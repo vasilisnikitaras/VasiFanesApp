@@ -38,10 +38,15 @@
         "public notice": "🌿 A whisper from the city to its people.",
         "local issue": "🌀 A ripple in the civic pond.",
         "meeting": "🏛️ A gathering of minds beneath shared purpose.",
-        "announcement": "📣 A call echoing through communal corridors."
+        "announcement": "📣 A call echoing through communal corridors.",
+        "feedback": "🔁 A civic echo returning to its source.",
+        "policy": "📜 A scroll of shared intentions.",
+        "petition": "✍️ A chorus of signatures seeking change.",
+        "event": "🎪 A civic moment planted in time."
       };
 
-      let translated = poeticMap[input.toLowerCase()] || `"${input}" translated into poetic civic clarity. 🌱`;
+      const lowerInput = input.toLowerCase();
+      let translated = poeticMap[lowerInput] || `"${input}" translated into poetic civic clarity. 🌱`;
       output.textContent = translated;
     }
   </script>
