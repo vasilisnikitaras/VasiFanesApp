@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Civic Translator</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="manifest" href="manifest.json" />
   <style>
     :root {
       --bg: #ffffff;
@@ -25,6 +24,8 @@
       background-color: var(--bg);
       color: var(--text);
       transition: background 0.3s, color 0.3s;
+      max-height: 100vh;
+      overflow-y: auto;
     }
     .container {
       max-width: 700px;
@@ -32,14 +33,8 @@
       padding: 2rem;
       text-align: center;
     }
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-    }
-    p {
-      font-size: 1.1rem;
-      margin-bottom: 1.5rem;
-    }
+    h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+    p { font-size: 1.1rem; margin-bottom: 1.5rem; }
     select, input, button, textarea {
       display: block;
       margin: 0.75rem auto;
@@ -47,17 +42,12 @@
       max-width: 600px;
       padding: 0.75rem 1rem;
       font-size: 1rem;
-      font-family: inherit;
       border: 2px solid var(--accent);
       border-radius: 8px;
       background-color: var(--bg);
       color: var(--text);
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       transition: all 0.2s ease-in-out;
-    }
-    select:hover, input:hover, button:hover, textarea:hover {
-      border-color: var(--hover);
-      box-shadow: 0 0 0 3px rgba(0,170,255,0.2);
     }
     button {
       background-color: var(--accent);
@@ -68,24 +58,12 @@
     button:hover {
       background-color: var(--hover);
     }
-    textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
     .output {
       margin-top: 1rem;
       padding: 1rem;
       border: 2px dashed var(--accent);
       border-radius: 8px;
       background-color: rgba(0, 119, 204, 0.05);
-      transition: box-shadow 0.3s ease-in-out;
-    }
-    .output.blooming {
-      animation: bloom 0.8s ease-out;
-    }
-    @keyframes bloom {
-      0% { box-shadow: 0 0 0 0 rgba(0,170,255,0.5); }
-      100% { box-shadow: 0 0 20px 10px rgba(0,170,255,0); }
     }
     footer {
       text-align: center;
@@ -95,32 +73,10 @@
       background-color: var(--bg);
       border-top: 1px solid var(--accent);
     }
-    @media screen and (max-width: 480px) {
-      .container { padding: 1rem; }
-      select, input, button, textarea {
-        width: 90%;
-        font-size: 1rem;
-        padding: 0.6rem 0.8rem;
-      }
-      h1 { font-size: 1.5rem; }
-      p { font-size: 1rem; }
-      footer { font-size: 0.8rem; padding: 0.5rem; }
-    }
-    body.dark {
-      background-color: #111;
-      color: #eee;
-    }
-    .dark button {
-      background-color: #333;
-      color: #fff;
-    }
-    .dark select, .dark input, .dark textarea {
-      background-color: #222;
-      color: #fff;
-      border: 1px solid #555;
-    }
   </style>
 </head>
+
+
 
 
 <body>
@@ -166,10 +122,12 @@
     <textarea id="inputText" placeholder="Enter civic insight, poetic report, or public data..."></textarea>
     <button onclick="translateText()">Translate</button>
 
-    <div id="translatedOutput" class="output"></div>
+    <!-- ✅ Το αποτέλεσμα εμφανίζεται εδώ, κάτω από το κουμπί -->
+    <div id="translatedOutput" class="output" style="margin-top: 1.5rem;"></div>
+
     <div id="badgeDisplay"></div>
 
-    <h3>Civic Log</h3>
+    <h3 style="margin-top: 2rem;">Civic Log</h3>
     <ul id="logList"></ul>
   </div>
 
@@ -179,8 +137,6 @@
   </div>
 
   <footer>© Vasilis Nikitaras – Fanes. All rights reserved.</footer>
-
-
 
 
 
@@ -239,7 +195,9 @@
 
   function returnToGarden() {
     alert("🌿 You’ve returned to the civic garden.\nAll tools await your next planting.");
-    closeApp(); // This function should exist in your main script.js
+    if (typeof closeApp === "function") {
+      closeApp();
+    }
   }
 </script>
 
@@ -251,23 +209,6 @@
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
