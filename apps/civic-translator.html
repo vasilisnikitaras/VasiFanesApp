@@ -240,6 +240,22 @@ body.dark {
   
 </head>
 <body>
+
+
+<!-- ...μέσα στο body... -->
+
+<div class="container">
+  <!-- Civic Translator UI -->
+  ...
+  <ul id="logList"></ul>
+</div>
+
+<!-- 🌿 Poetic Return Button -->
+<div style="margin-top: 2rem;">
+  <button onclick="returnToGarden()">🌿 Return to Civic Garden</button>
+</div>
+
+
   <!--
   <nav>
     <a href="https://vasilisnikitaras.github.io/civic-translator/">🏠 Home</a>
@@ -251,9 +267,9 @@ body.dark {
   <button onclick="location.href='welcome.html'">🏠 Home</button>
 </nav>
 -->
-  
+  <!--
 <a href="#" onclick="closeApp()">Back to Home</a>
-
+-->
   
   <div class="container">
     <h1>🌍 Civic Translator</h1>
@@ -342,7 +358,12 @@ function translateText() {
 
 </script>
 
-
+<script>
+  function returnToGarden() {
+    alert("🌿 You’ve returned to the civic garden.\nAll tools await your next planting.");
+    closeApp();
+  }
+</script>
 
   
   <script src="script.js" defer></script>
