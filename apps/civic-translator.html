@@ -119,9 +119,16 @@
     <textarea id="fallbackInput" placeholder="Enter fallback insight..." style="display:none;"></textarea>
     <button onclick="translateWithMyMemory()">Try Fallback</button>
 
+  
+    
     <textarea id="inputText" placeholder="Enter civic insight, poetic report, or public data..."></textarea>
     <button onclick="translateText()">Translate</button>
 
+    <button onclick="clearFields()">🧹 Clear Fields</button>
+
+    <button onclick="clearFields()">🧹 Clear Fields</button>
+
+    
     <!-- ✅ Το αποτέλεσμα εμφανίζεται εδώ, κάτω από το κουμπί -->
     <div id="translatedOutput" class="output" style="margin-top: 1.5rem;"></div>
 
@@ -178,6 +185,16 @@
     const output = document.getElementById("translatedOutput");
     const logList = document.getElementById("logList");
 
+
+
+function clearFields() {
+  document.getElementById("inputText").value = "";
+  document.getElementById("translatedOutput").innerHTML = "";
+  document.getElementById("fallbackInput").value = "";
+}
+
+
+    
     if (!fallback) {
       output.textContent = "Please enter fallback insight.";
       return;
@@ -199,6 +216,7 @@
       closeApp();
     }
   }
+
 </script>
 
 <script src="script.js" defer></script>
