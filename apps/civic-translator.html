@@ -194,18 +194,25 @@ function translateWithMyMemory() {
 }
 
 // 🧹 Clear Fields
-function clearFields() {
+/*function clearFields() {
   document.getElementById("inputText").value = "";
   document.getElementById("translatedOutput").innerHTML = "";
   document.getElementById("fallbackInput").value = "";
 }
-
+*/
 // 🌿 Return to Civic Garden
 function returnToGarden() {
   alert("🌿 You’ve returned to the civic garden.\nAll tools await your next planting.");
   if (typeof closeApp === "function") {
     closeApp();
   }
+}
+
+function clearFields() {
+  document.getElementById("inputText").value = "";
+  document.getElementById("translatedOutput").innerHTML = "";
+  document.getElementById("fallbackInput").value = "";
+  document.getElementById("logList").innerHTML = "";
 }
 
 </script>
